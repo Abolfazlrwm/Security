@@ -8,10 +8,10 @@ repository-relative ones.
 
 | Artifact | Tool | Target | Notes |
 | --- | --- | --- | --- |
-| `dirbrute/local-run.txt` | dirbrute 1.0.0 | local demo webserver on `127.0.0.1:8080` | 13 paths found, wildcard baseline shown in the progress lines |
-| `hashcrack/demo-hashes.txt`, `hashcrack/demo-run.txt` | hashcrack 1.0.0 | digests created for the demo | plain lookup, rule chain `capitalize,append4`, and a salted hash |
-| `subdomain-enum/debian.org.json`, `subdomain-enum/run.txt` | subdomain-enum 1.0.0 | public domain `debian.org` | crt.sh was unreachable during the capture; all 15 names come from the verified DNS brute channel |
-| `recon-pipeline/report.md`, `report.json`, `run.txt` | recon-pipeline 1.0.0 | same local demo webserver | host passed with `--hosts`, so the report records the subdomain phase as skipped |
+| `dirbrute/local-run.txt` | dirbrute 1.1.0 | local demo webserver on `127.0.0.1:8080` | 13 paths found, wildcard baseline shown in the progress lines |
+| `hashcrack/demo-hashes.txt`, `hashcrack/demo-run.txt` | hashcrack 1.1.0 | digests created for the demo | plain lookup, rule chain `capitalize,append4`, and a salted hash |
+| `subdomain-enum/debian.org.json`, `subdomain-enum/run.txt` | subdomain-enum 1.1.0 | public domain `debian.org` | crt.sh was unreachable during the capture; all 15 names come from the verified DNS brute channel |
+| `recon-pipeline/report.md`, `report.json`, `run.txt` | recon-pipeline 1.1.0 | same local demo webserver | host passed with `--hosts`, so the report records the subdomain phase as skipped |
 
 ## Why most targets are local
 

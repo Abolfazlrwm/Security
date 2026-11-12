@@ -1,10 +1,10 @@
 {
   "tool": "recon-pipeline",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "target": "http://127.0.0.1:8080",
   "base_url": "http://127.0.0.1:8080",
-  "generated_at": "2026-11-12 11:47 UTC",
-  "tools": "subdomain-enum + dirbrute (pipeline 1.0.0)",
+  "generated_at": "2026-11-12 12:04 UTC",
+  "tools": "subdomain-enum + dirbrute (pipeline 1.1.0)",
   "phases": {
     "subdomains": {
       "ran": false,
@@ -19,9 +19,9 @@
           "count": 13,
           "findings": [
             {
-              "path": "robots.txt",
+              "path": "index.html",
               "status": 200,
-              "size": 67
+              "size": 96
             },
             {
               "path": "sitemap.xml",
@@ -29,14 +29,14 @@
               "size": 199
             },
             {
-              "path": "index.html",
+              "path": "robots.txt",
               "status": 200,
-              "size": 96
+              "size": 67
             },
             {
-              "path": "api",
-              "status": 301,
-              "size": 0
+              "path": ".env",
+              "status": 200,
+              "size": 124
             },
             {
               "path": "admin",
@@ -44,7 +44,7 @@
               "size": 0
             },
             {
-              "path": "api/v1",
+              "path": "api",
               "status": 301,
               "size": 0
             },
@@ -69,19 +69,19 @@
               "size": 152
             },
             {
-              "path": ".env",
-              "status": 200,
-              "size": 124
-            },
-            {
-              "path": ".git/HEAD",
-              "status": 200,
-              "size": 21
+              "path": "api/v1",
+              "status": 301,
+              "size": 0
             },
             {
               "path": ".git/config",
               "status": 200,
               "size": 104
+            },
+            {
+              "path": ".git/HEAD",
+              "status": 200,
+              "size": 21
             }
           ],
           "returncode": 0

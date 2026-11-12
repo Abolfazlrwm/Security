@@ -1,7 +1,7 @@
 {
   "count": 15,
   "domain": "debian.org",
-  "generated_at": "2026-11-12T11:47:21Z",
+  "generated_at": "2026-11-12T12:04:38Z",
   "subdomains": [
     {
       "name": "admin.debian.org",
@@ -96,6 +96,6 @@
   ],
   "tool": "subdomain-enum",
   "unverified_crtsh_names": 0,
-  "version": "1.0.0",
+  "version": "1.1.0",
   "wildcard_dns": false
 }

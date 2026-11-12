@@ -11,12 +11,12 @@ $ python3 subdomain-enum/subdomain_enum.py debian.org \
 -- stderr (progress) ------------------------------------------------------
 [*] target: debian.org (resolvers: 1.1.1.1, 8.8.8.8)
 [*] querying crt.sh certificate transparency logs ...
-[!] crt.sh request 1/3 failed: The read operation timed out
-[!] crt.sh request 2/3 failed: The read operation timed out
-[!] crt.sh request 3/3 failed: The read operation timed out
+[!] crt.sh request 1/3 failed: HTTP Error 502: Bad Gateway
+[!] crt.sh request 2/3 failed: HTTP Error 502: Bad Gateway
+[!] crt.sh request 3/3 failed: HTTP Error 502: Bad Gateway
 [!] continuing without certificate transparency data
 [*] crt.sh contributed 0 candidate names
 [*] brute forcing 146 labels with 30 threads ...
 [*] DNS brute force confirmed 15 names
-[*] results written to examples/subdomain-enum/debian.org.json
-[*] done: 15 live subdomains, 0 stale crt.sh entries, 36.4s
+[*] results written to /tmp/examples-work2/subdomains-debian.json
+[*] done: 15 live subdomains, 0 stale crt.sh entries, 9.2s
