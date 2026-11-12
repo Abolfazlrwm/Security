@@ -17,7 +17,7 @@ import time
 from pathlib import Path
 
 TOOL_NAME = "hashcrack"
-TOOL_VERSION = "1.0.0"
+TOOL_VERSION = "1.1.0"
 
 ALGOS = ("md5", "sha1", "sha256")
 ALGO_BY_LENGTH = {32: "md5", 40: "sha1", 64: "sha256"}

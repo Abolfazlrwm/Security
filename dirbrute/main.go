@@ -76,7 +76,7 @@ func newFlagSet(cfg *config) *flag.FlagSet {
 	fs.StringVar(&cfg.extRaw, "x", "", "comma separated extensions to probe, e.g. php,html")
 	fs.StringVar(&cfg.badRaw, "b", "404", "comma separated status codes to ignore")
 	fs.StringVar(&cfg.lenRaw, "exclude-length", "", "comma separated body sizes to ignore")
-	fs.StringVar(&cfg.userAgent, "a", "dirbrute/1.0", "user agent to send with every request")
+	fs.StringVar(&cfg.userAgent, "a", "dirbrute/1.1", "user agent to send with every request")
 	fs.StringVar(&cfg.cookies, "c", "", "raw Cookie header to send")
 	fs.Var(&cfg.headers, "H", "extra request header, repeatable (e.g. -H 'X-Forwarded-For: 10.0.0.1')")
 	fs.BoolVar(&cfg.followRedirect, "r", false, "follow redirects (3xx findings are reported either way)")

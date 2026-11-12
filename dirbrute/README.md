@@ -46,7 +46,7 @@ $ ./dirbrute -u https://target/ -H 'Authorization: Bearer <token>' -c 'session=a
 | `-x` | Extensions to probe, comma separated | none |
 | `-b` | Status codes to ignore | 404 |
 | `-exclude-length` | Body sizes to ignore | none |
-| `-a` | User agent | dirbrute/1.0 |
+| `-a` | User agent | dirbrute/1.1 |
 | `-c` | Raw Cookie header | none |
 | `-H` | Extra header, repeatable | none |
 | `-r` | Follow redirects | off |

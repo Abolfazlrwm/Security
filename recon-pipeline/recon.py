@@ -25,7 +25,7 @@ import time
 from pathlib import Path
 
 TOOL_NAME = "recon-pipeline"
-TOOL_VERSION = "1.0.0"
+TOOL_VERSION = "1.1.0"
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 SUBDOMAIN_SCRIPT = REPO_ROOT / "subdomain-enum" / "subdomain_enum.py"
