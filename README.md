@@ -1,0 +1,85 @@
+# Security
+
+A compact toolkit of network reconnaissance and auditing tools, written in
+Python and Go with zero third-party dependencies.
+
+> **Authorized use only.** These tools are meant for education, CTFs and
+> testing systems you own or have explicit permission to assess.
+
+## Tools
+
+| Tool | Language | What it does |
+| --- | --- | --- |
+| [subdomain-enum](subdomain-enum/) | Python 3 | Subdomain discovery via crt.sh and threaded DNS brute force |
+| [dirbrute](dirbrute/) | Go | Threaded directory and file brute-forcer with wildcard filtering |
+| [hashcrack](hashcrack/) | Python 3 | MD5 / SHA-1 / SHA-256 cracking with wordlists and rule chains |
+| [recon-pipeline](recon-pipeline/) | Python 3 | Chains the tools above and writes a consolidated report |
+
+## Quick start
+
+### Subdomain enumeration
+
+```console
+$ python3 subdomain-enum/subdomain_enum.py example.com -f json -o subs.json
+$ python3 subdomain-enum/subdomain_enum.py example.com --no-crtsh -t 50
+```
+
+### Directory brute force
+
+```console
+$ make build                 # compiles dirbrute/dirbrute (Go 1.19+)
+$ ./dirbrute/dirbrute -u https://target/ -t 30
+$ ./dirbrute/dirbrute -u https://target/ -w paths.txt -x php,html -o found.txt
+```
+
+### Hash cracking
+
+```console
+$ python3 hashcrack/hashcrack.py --hash 5f4dcc3b5aa765d61d8327deb882cf99
+$ python3 hashcrack/hashcrack.py --hashes hashes.txt --rules capitalize,append2
+```
+
+### Full recon run
+
+```console
+$ make build
+$ python3 recon-pipeline/recon.py --domain example.com
+$ python3 recon-pipeline/recon.py --hosts web01,web02 --url https://staging.internal
+```
+
+Every pipeline run writes `report.md`, `report.json` and the raw tool logs
+into `reports/<target>-<timestamp>/`.
+
+## Building
+
+The Python tools run on any Python 3.8+ interpreter with no extra packages.
+The Go tool needs a Go 1.19+ toolchain:
+
+```console
+$ make build     # build the dirbrute binary
+$ make vet       # go vet
+$ make clean     # remove the binary
+```
+
+## Repository layout
+
+```
+Security/
+├── subdomain-enum/
+│   ├── subdomain_enum.py
+│   └── wordlists/subdomains.txt
+├── dirbrute/
+│   ├── main.go
+│   ├── scanner.go
+│   └── wordlists/common.txt
+├── hashcrack/
+│   ├── hashcrack.py
+│   └── wordlists/common-passwords.txt
+├── recon-pipeline/
+│   └── recon.py
+└── Makefile
+```
+
+## License
+
+Released under the [MIT License](LICENSE).
