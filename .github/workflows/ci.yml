@@ -56,6 +56,7 @@ jobs:
       # Windows runners check out with CRLF by default, which makes gofmt
       # flag every file; force LF before the working tree exists.
       - name: Configure git line endings
+        working-directory: .
         run: git config --global core.autocrlf false
 
       - uses: actions/checkout@v4
