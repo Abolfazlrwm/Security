@@ -1,0 +1,101 @@
+{
+  "count": 15,
+  "domain": "debian.org",
+  "generated_at": "2026-11-12T11:47:21Z",
+  "subdomains": [
+    {
+      "name": "admin.debian.org",
+      "sources": [
+        "dns"
+      ]
+    },
+    {
+      "name": "cloud.debian.org",
+      "sources": [
+        "dns"
+      ]
+    },
+    {
+      "name": "db.debian.org",
+      "sources": [
+        "dns"
+      ]
+    },
+    {
+      "name": "dns.debian.org",
+      "sources": [
+        "dns"
+      ]
+    },
+    {
+      "name": "ftp.debian.org",
+      "sources": [
+        "dns"
+      ]
+    },
+    {
+      "name": "git.debian.org",
+      "sources": [
+        "dns"
+      ]
+    },
+    {
+      "name": "grafana.debian.org",
+      "sources": [
+        "dns"
+      ]
+    },
+    {
+      "name": "mx.debian.org",
+      "sources": [
+        "dns"
+      ]
+    },
+    {
+      "name": "qa.debian.org",
+      "sources": [
+        "dns"
+      ]
+    },
+    {
+      "name": "sso.debian.org",
+      "sources": [
+        "dns"
+      ]
+    },
+    {
+      "name": "static.debian.org",
+      "sources": [
+        "dns"
+      ]
+    },
+    {
+      "name": "upload.debian.org",
+      "sources": [
+        "dns"
+      ]
+    },
+    {
+      "name": "vpn.debian.org",
+      "sources": [
+        "dns"
+      ]
+    },
+    {
+      "name": "wiki.debian.org",
+      "sources": [
+        "dns"
+      ]
+    },
+    {
+      "name": "www.debian.org",
+      "sources": [
+        "dns"
+      ]
+    }
+  ],
+  "tool": "subdomain-enum",
+  "unverified_crtsh_names": 0,
+  "version": "1.0.0",
+  "wildcard_dns": false
+}

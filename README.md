@@ -50,6 +50,16 @@ $ python3 recon-pipeline/recon.py --hosts web01,web02 --url https://staging.inte
 Every pipeline run writes `report.md`, `report.json` and the raw tool logs
 into `reports/<target>-<timestamp>/`.
 
+## Examples
+
+The [examples/](examples/) directory contains captured output from real
+runs of every tool: a directory scan against a local demo webserver,
+three hash-cracking sessions (plain lookup, rule chain, salted digest),
+a verified subdomain enumeration of `debian.org`, and the consolidated
+pipeline report. Each artifact records the exact command that produced
+it, so you can see the expected output shape before running anything
+against your own targets.
+
 ## Building
 
 The Python tools run on any Python 3.8+ interpreter with no extra packages.
@@ -77,6 +87,7 @@ Security/
 │   └── wordlists/common-passwords.txt
 ├── recon-pipeline/
 │   └── recon.py
+├── examples/          # captured output from real runs
 └── Makefile
 ```
 

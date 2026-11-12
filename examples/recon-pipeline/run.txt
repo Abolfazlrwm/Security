@@ -1,0 +1,14 @@
+# recon-pipeline - captured run
+# Same local demo webserver as examples/dirbrute/local-run.txt.
+# The host was passed with --hosts, so the subdomain phase is
+# recorded as skipped; a live subdomain-phase capture is in
+# examples/subdomain-enum/.
+
+$ python3 recon-pipeline/recon.py --hosts 127.0.0.1 \
+    --url http://127.0.0.1:8080 --scheme http --output-dir reports
+
+[*] work directory: reports/http-127.0.0.1-8080-20261112-114731
+[*] phase 2/2: directory brute force on 1 host(s) ...
+[*]   scanning http://127.0.0.1:8080
+[*]   13 findings on http://127.0.0.1:8080
+[*] report written to reports/http-127.0.0.1-8080-20261112-114731/report.md (1.5s total)

@@ -1,0 +1,26 @@
+# dirbrute - captured run
+# Target: a small demo webserver running on 127.0.0.1:8080 with the
+# file layout from examples/README.md. stdout holds the findings,
+# stderr holds the progress lines.
+
+$ ./dirbrute/dirbrute -u http://127.0.0.1:8080/ -t 10
+
+-- stdout ----------------------------------------------------------------
+index.html (Status: 200) [Size: 96]
+robots.txt (Status: 200) [Size: 67]
+sitemap.xml (Status: 200) [Size: 199]
+.git/config (Status: 200) [Size: 104]
+.git/HEAD (Status: 200) [Size: 21]
+admin (Status: 301) [Size: 0]
+api/v1 (Status: 301) [Size: 0]
+api (Status: 301) [Size: 0]
+server-status (Status: 200) [Size: 57]
+uploads (Status: 301) [Size: 0]
+phpinfo.php (Status: 200) [Size: 30]
+backup.zip (Status: 200) [Size: 152]
+.env (Status: 200) [Size: 124]
+
+-- stderr ----------------------------------------------------------------
+[!] wildcard response detected (status 404, size 335), identical responses are skipped
+[*] 145 candidates queued with 10 workers
+[x] 145/145 checked, 13 findings

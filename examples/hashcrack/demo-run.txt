@@ -1,0 +1,41 @@
+# hashcrack - captured runs
+# Targets are digests of weak passwords created for this demo,
+# see demo-hashes.txt. The bundled 80-entry wordlist is used.
+
+$ python3 hashcrack/hashcrack.py --hashes examples/hashcrack/demo-hashes.txt
+
+-- stdout ----------------------------------------------------------------
+[+] cracked b1b3773a05c0ed0176787a4f1574ff0075f7521e -> qwerty
+[+] cracked 6ca13d52ca70c883e0f0bb101e425a89e8624de51db2d2392593af6a84118090 -> abc123
+[+] cracked 482c811da5d5b4bc6d497ffa98491e38 -> password123
+
+-- stderr ----------------------------------------------------------------
+[*] using bundled wordlist hashcrack/wordlists/common-passwords.txt
+[*] 4 target(s) using md5, sha1, sha256
+[*] finished: 3/4 cracked, 80 candidates, 298,815 h/s, 0.0s
+# exit code 1: one digest intentionally needs the rule engine
+
+
+$ python3 hashcrack/hashcrack.py --hash 0d491297649a8a4f7768f3e5784c52f1 \
+    --rules capitalize,append4
+
+-- stdout ----------------------------------------------------------------
+[+] cracked 0d491297649a8a4f7768f3e5784c52f1 -> Password2024
+
+-- stderr ----------------------------------------------------------------
+[*] using bundled wordlist hashcrack/wordlists/common-passwords.txt
+[*] 1 target(s) using md5
+[*] rules ['capitalize', 'append4'] expand 80 words to ~800,000 candidates
+[*] finished: 1/1 cracked, 22,025 candidates, 777,362 h/s, 0.0s
+
+
+$ python3 hashcrack/hashcrack.py --hash 6b431529217a4ed5600c7d23247fdac4 \
+    --salt salt123 --salt-position prefix
+
+-- stdout ----------------------------------------------------------------
+[+] cracked 6b431529217a4ed5600c7d23247fdac4 -> salt123admin
+
+-- stderr ----------------------------------------------------------------
+[*] using bundled wordlist hashcrack/wordlists/common-passwords.txt
+[*] 1 target(s) using md5
+[*] finished: 1/1 cracked, 14 candidates, 181,842 h/s, 0.0s

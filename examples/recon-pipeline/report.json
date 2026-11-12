@@ -1,0 +1,97 @@
+{
+  "tool": "recon-pipeline",
+  "version": "1.0.0",
+  "target": "http://127.0.0.1:8080",
+  "base_url": "http://127.0.0.1:8080",
+  "generated_at": "2026-11-12 11:47 UTC",
+  "tools": "subdomain-enum + dirbrute (pipeline 1.0.0)",
+  "phases": {
+    "subdomains": {
+      "ran": false,
+      "reason": "host list provided via --hosts",
+      "count": 0,
+      "subdomains": []
+    },
+    "dirbrute": {
+      "ran": true,
+      "hosts": {
+        "http://127.0.0.1:8080": {
+          "count": 13,
+          "findings": [
+            {
+              "path": "robots.txt",
+              "status": 200,
+              "size": 67
+            },
+            {
+              "path": "sitemap.xml",
+              "status": 200,
+              "size": 199
+            },
+            {
+              "path": "index.html",
+              "status": 200,
+              "size": 96
+            },
+            {
+              "path": "api",
+              "status": 301,
+              "size": 0
+            },
+            {
+              "path": "admin",
+              "status": 301,
+              "size": 0
+            },
+            {
+              "path": "api/v1",
+              "status": 301,
+              "size": 0
+            },
+            {
+              "path": "server-status",
+              "status": 200,
+              "size": 57
+            },
+            {
+              "path": "uploads",
+              "status": 301,
+              "size": 0
+            },
+            {
+              "path": "phpinfo.php",
+              "status": 200,
+              "size": 30
+            },
+            {
+              "path": "backup.zip",
+              "status": 200,
+              "size": 152
+            },
+            {
+              "path": ".env",
+              "status": 200,
+              "size": 124
+            },
+            {
+              "path": ".git/HEAD",
+              "status": 200,
+              "size": 21
+            },
+            {
+              "path": ".git/config",
+              "status": 200,
+              "size": 104
+            }
+          ],
+          "returncode": 0
+        }
+      }
+    }
+  },
+  "summary": {
+    "subdomains": 0,
+    "hosts_scanned": 1,
+    "findings": 13
+  }
+}

@@ -1,0 +1,6 @@
+# one digest per line, algorithm auto-detected from the length
+482c811da5d5b4bc6d497ffa98491e38
+b1b3773a05c0ed0176787a4f1574ff0075f7521e
+6ca13d52ca70c883e0f0bb101e425a89e8624de51db2d2392593af6a84118090
+# needs rules: capitalize + append4 turns 'password' into 'Password2024'
+0d491297649a8a4f7768f3e5784c52f1
