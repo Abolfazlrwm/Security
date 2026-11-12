@@ -29,7 +29,7 @@ import urllib.request
 from pathlib import Path
 
 TOOL_NAME = "subdomain-enum"
-TOOL_VERSION = "1.1.0"
+TOOL_VERSION = "1.2.0"
 
 CRTSH_ENDPOINT = "https://crt.sh/?q=%25.{domain}&output=json"
 CRTSH_RETRIES = 3
