@@ -77,7 +77,7 @@ ALL CHECKS PASSED
 ```
 
 GitHub Actions runs the harness on every push to `main`, byte-compiles
-the Python tools on 3.8 and 3.12, and runs `gofmt`, `go vet` and `go
+the Python tools on 3.11 and 3.12, and runs `gofmt`, `go vet` and `go
 build` on Linux, macOS and Windows. Pushing a `dirbrute-v*` tag also
 cross-compiles release binaries for Linux, macOS and Windows and attaches
 them to the GitHub release automatically.
