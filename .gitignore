@@ -1,0 +1,14 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Go build output
+dirbrute/dirbrute
+dirbrute/dirbrute.exe
+
+# Local artifacts
+reports/
+*.log
+.DS_Store
