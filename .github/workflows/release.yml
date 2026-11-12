@@ -1,0 +1,48 @@
+name: Release binaries
+
+on:
+  push:
+    tags:
+      - "dirbrute-v*"
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build and attach dirbrute binaries
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.23"
+          cache-dependency-path: dirbrute/go.sum
+
+      - name: Cross-compile release binaries
+        shell: bash
+        env:
+          TARGETS: "linux/amd64 linux/arm64 darwin/amd64 darwin/arm64 windows/amd64"
+        run: |
+          VERSION="${GITHUB_REF_NAME#dirbrute-v}"
+          cd dirbrute
+          for target in $TARGETS; do
+            goos="${target%%/*}"
+            goarch="${target##*/}"
+            exe=""
+            [ "$goos" = "windows" ] && exe=".exe"
+            echo "building dirbrute-${VERSION}-${goos}-${goarch}${exe}"
+            GOOS="$goos" GOARCH="$goarch" \
+              go build -trimpath -ldflags "-s -w" \
+              -o "dirbrute-${VERSION}-${goos}-${goarch}${exe}" .
+          done
+          sha256sum dirbrute-* > checksums.txt
+
+      - name: Attach binaries to the release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dirbrute/dirbrute-*
+            dirbrute/checksums.txt
+          fail_on_unmatched_files: true

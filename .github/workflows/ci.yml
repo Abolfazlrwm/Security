@@ -1,0 +1,92 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  python-tools:
+    name: Python tools (${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.8", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Byte-compile every tool
+        run: python -m compileall subdomain-enum hashcrack recon-pipeline
+
+      - name: hashcrack smoke test (plain lookup)
+        run: |
+          python3 hashcrack/hashcrack.py --hash 5f4dcc3b5aa765d61d8327deb882cf99
+
+      - name: hashcrack smoke test (rule chain)
+        run: |
+          python3 hashcrack/hashcrack.py --hash 0d491297649a8a4f7768f3e5784c52f1 --rules capitalize,append4
+
+      - name: CLI help pages
+        run: |
+          python3 subdomain-enum/subdomain_enum.py --help > /dev/null
+          python3 recon-pipeline/recon.py --help > /dev/null
+
+  go-tool:
+    name: Go tool (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        working-directory: dirbrute
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.23"
+          cache-dependency-path: dirbrute/go.sum
+
+      - name: gofmt check
+        shell: bash
+        run: test -z "$(gofmt -l .)" || { gofmt -l .; exit 1; }
+
+      - name: go vet
+        run: go vet ./...
+
+      - name: go build
+        run: go build -o dirbrute .
+
+  integration:
+    name: Integration test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.23"
+          cache-dependency-path: dirbrute/go.sum
+
+      - name: Build dirbrute
+        run: make build
+
+      - name: Run integration harness
+        run: python3 tests/integration.py

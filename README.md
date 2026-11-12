@@ -1,5 +1,7 @@
 # Security
 
+[![CI](https://github.com/Abolfazlrwm/Security/actions/workflows/ci.yml/badge.svg)](https://github.com/Abolfazlrwm/Security/actions/workflows/ci.yml)
+
 A compact toolkit of network reconnaissance and auditing tools, written in
 Python and Go with zero third-party dependencies.
 
@@ -60,6 +62,26 @@ pipeline report. Each artifact records the exact command that produced
 it, so you can see the expected output shape before running anything
 against your own targets.
 
+## Testing and CI
+
+`tests/integration.py` is a self-contained harness (standard library only)
+that spins up a local demo webserver and verifies the whole toolkit:
+hashcrack sessions (plain lookup, rule chain, salted digest), a full
+dirbrute scan including wildcard filtering, and an end-to-end
+recon-pipeline run:
+
+```console
+$ make build
+$ python3 tests/integration.py
+ALL CHECKS PASSED
+```
+
+GitHub Actions runs the harness on every push to `main`, byte-compiles
+the Python tools on 3.8 and 3.12, and runs `gofmt`, `go vet` and `go
+build` on Linux, macOS and Windows. Pushing a `dirbrute-v*` tag also
+cross-compiles release binaries for Linux, macOS and Windows and attaches
+them to the GitHub release automatically.
+
 ## Building
 
 The Python tools run on any Python 3.8+ interpreter with no extra packages.
@@ -88,6 +110,8 @@ Security/
 ├── recon-pipeline/
 │   └── recon.py
 ├── examples/          # captured output from real runs
+├── tests/
+│   └── integration.py # local end-to-end harness
 └── Makefile
 ```
 
