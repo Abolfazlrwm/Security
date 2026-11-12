@@ -4,13 +4,15 @@ on:
   push:
     tags:
       - "dirbrute-v*"
+      - "subdomain-enum-v*"
 
 permissions:
   contents: write
 
 jobs:
-  build:
+  dirbrute:
     name: Build and attach dirbrute binaries
+    if: startsWith(github.ref_name, 'dirbrute-v')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -45,4 +47,69 @@ jobs:
           files: |
             dirbrute/dirbrute-*
             dirbrute/checksums.txt
+          fail_on_unmatched_files: true
+
+  subdomain-enum:
+    name: Build subdomain-enum (${{ matrix.platform }})
+    if: startsWith(github.ref_name, 'subdomain-enum-v')
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            platform: linux-x86_64
+          - os: macos-latest
+            platform: macos-arm64
+          - os: windows-latest
+            platform: windows-x86_64
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install PyInstaller
+        run: pip install "pyinstaller>=6,<7"
+
+      - name: Build standalone binary
+        shell: bash
+        run: |
+          VERSION="${GITHUB_REF_NAME#subdomain-enum-v}"
+          pyinstaller --onefile --clean --noconfirm \
+            --name "subdomain-enum-${VERSION}-${{ matrix.platform }}" \
+            subdomain-enum/subdomain_enum.py
+
+      - name: Smoke test the binary
+        shell: bash
+        run: ./dist/subdomain-enum-* --help > /dev/null
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: subdomain-enum-${{ matrix.platform }}
+          path: dist/subdomain-enum-*
+          if-no-files-found: error
+
+  subdomain-enum-release:
+    name: Attach subdomain-enum binaries to the release
+    needs: subdomain-enum
+    runs-on: ubuntu-latest
+    steps:
+      - name: Collect built binaries
+        uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
+
+      - name: Generate checksums
+        run: cd dist && sha256sum * > checksums.txt
+
+      - name: Attach binaries to the release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dist/subdomain-enum-*
+            dist/checksums.txt
           fail_on_unmatched_files: true

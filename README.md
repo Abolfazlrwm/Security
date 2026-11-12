@@ -78,9 +78,11 @@ ALL CHECKS PASSED
 
 GitHub Actions runs the harness on every push to `main`, byte-compiles
 the Python tools on 3.11 and 3.12, and runs `gofmt`, `go vet` and `go
-build` on Linux, macOS and Windows. Pushing a `dirbrute-v*` tag also
-cross-compiles release binaries for Linux, macOS and Windows and attaches
-them to the GitHub release automatically.
+build` on Linux, macOS and Windows. Release tags build downloadable
+binaries automatically: a `dirbrute-v*` tag cross-compiles the Go binary
+for Linux, macOS and Windows, and a `subdomain-enum-v*` tag packages the
+enumerator as standalone executables with PyInstaller. Both attach their
+artifacts and sha256 checksums to the GitHub release.
 
 ## Building
 
