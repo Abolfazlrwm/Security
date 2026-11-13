@@ -9,6 +9,14 @@ Python and Go with zero third-party dependencies.
 > **Authorized use only.** These tools are meant for education, CTFs and
 > testing systems you own or have explicit permission to assess.
 
+## Demo
+
+Three tools against a local demo target, exactly as captured in
+[examples/](examples/) — hash cracking, directory brute force and the
+consolidated pipeline:
+
+![Toolkit demo: hashcrack, dirbrute and recon-pipeline running in a terminal](docs/demo.gif)
+
 ## Tools
 
 | Tool | Language | What it does |
@@ -144,9 +152,21 @@ Security/
 ├── tests/
 │   └── integration.py # local end-to-end harness
 ├── docs/
-│   └── actions.md     # CI/CD pipeline documentation
+│   ├── actions.md     # CI/CD pipeline documentation
+│   └── demo.gif       # terminal demo of the tools
+├── SECURITY.md        # how to report vulnerabilities
+├── CONTRIBUTING.md    # dev setup, gates and release process
 └── Makefile
 ```
+
+## Contributing and security
+
+Bug reports, feature ideas and pull requests are welcome — see
+[CONTRIBUTING.md](CONTRIBUTING.md) for the dev setup, the local test
+gates, the commit style and the tag-driven release process. To report a
+vulnerability, please use GitHub's private security advisory instead of
+a public issue — the policy, scope and response targets are in
+[SECURITY.md](SECURITY.md).
 
 ## License
 
