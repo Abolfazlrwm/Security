@@ -8,8 +8,9 @@ single report:
 2. **Directory brute force** — runs the compiled `dirbrute` binary (or
    `go run .` when a Go toolchain is available) against the base URL and the
    discovered hosts;
-3. **Reporting** — writes `report.md`, `report.json` and the raw tool logs
-   into `reports/<target>-<timestamp>/`.
+3. **Reporting** — writes `report.html` (a self-contained, dark-themed page),
+   `report.md`, `report.json` and the raw tool logs into
+   `reports/<target>-<timestamp>/`.
 
 ## Prerequisites
 
@@ -34,12 +35,19 @@ for re-scanning a known list. Otherwise the base domain plus up to
 
 ```text
 reports/example.com-20261112-101500/
+├── report.html            # self-contained HTML report (no external assets)
 ├── report.md              # human readable summary
 ├── report.json            # machine readable, stable schema
 ├── subdomains.json        # raw subdomain-enum output
 ├── subdomain-enum.log     # raw stderr of phase 1
 └── dirbrute-01.log        # raw output of each directory scan
 ```
+
+The HTML report is a single file: styles are inlined, every dynamic value is
+escaped, and it references no scripts, fonts or CDN assets — safe to open
+offline and safe to share as-is. Findings get color-coded status pills
+(2xx green, 3xx blue, 401/403 amber, 5xx red) and a summary header with the
+run totals.
 
 Markdown reports look like this:
 
