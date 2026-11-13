@@ -131,3 +131,24 @@ $ ./dirbrute-1.2.0-linux-amd64 -u https://target/ -t 30
 - **Artifacts** — intermediate build artifacts (one per PyInstaller
   platform) are retained per run, so a release job can be re-run without
   recompiling the platforms that already succeeded.
+
+## Release history
+
+Every tag since the project started, with what it shipped. Each entry
+links to its release page; binary rows name the platforms that were
+attached automatically.
+
+| Tag | Date | Highlights | Binaries |
+| --- | --- | --- | --- |
+| [dirbrute-v1.0.0](https://github.com/Abolfazlrwm/Security/releases/tag/dirbrute-v1.0.0) | 2026-11-12 | First release: threaded Go brute-forcer with wildcard filtering and an embedded wordlist | — predates the binary pipeline |
+| [dirbrute-v1.1.0](https://github.com/Abolfazlrwm/Security/releases/tag/dirbrute-v1.1.0) | 2026-11-12 | Captured `examples/dirbrute/` run; user agent bumped to `dirbrute/1.1` | — predates the binary pipeline |
+| [dirbrute-v1.1.1](https://github.com/Abolfazlrwm/Security/releases/tag/dirbrute-v1.1.1) | 2026-11-13 | First automated binary release | 5 platforms + checksums |
+| [subdomain-enum-v1.0.0](https://github.com/Abolfazlrwm/Security/releases/tag/subdomain-enum-v1.0.0) | 2026-11-12 | First release: crt.sh lookup plus threaded DNS brute force | — predates the binary pipeline |
+| [subdomain-enum-v1.1.0](https://github.com/Abolfazlrwm/Security/releases/tag/subdomain-enum-v1.1.0) | 2026-11-12 | Verified `examples/subdomain-enum/` capture of `debian.org` | — predates the binary pipeline |
+| [subdomain-enum-v1.2.0](https://github.com/Abolfazlrwm/Security/releases/tag/subdomain-enum-v1.2.0) | 2026-11-12 | First automated binary release | 3 platforms + checksums |
+| [hashcrack-v1.0.0](https://github.com/Abolfazlrwm/Security/releases/tag/hashcrack-v1.0.0) | 2026-11-12 | First release: MD5/SHA-1/SHA-256 cracker with rule chains and salting | — predates the binary pipeline |
+| [hashcrack-v1.1.0](https://github.com/Abolfazlrwm/Security/releases/tag/hashcrack-v1.1.0) | 2026-11-12 | Three captured `examples/hashcrack/` sessions, including a salted digest | — predates the binary pipeline |
+| [hashcrack-v1.1.1](https://github.com/Abolfazlrwm/Security/releases/tag/hashcrack-v1.1.1) | 2026-11-13 | First automated binary release | 3 platforms + checksums |
+| [recon-pipeline-v1.0.0](https://github.com/Abolfazlrwm/Security/releases/tag/recon-pipeline-v1.0.0) | 2026-11-12 | First release: chains the tools, writes `report.md` + `report.json` + raw logs | runs from source |
+| [recon-pipeline-v1.1.0](https://github.com/Abolfazlrwm/Security/releases/tag/recon-pipeline-v1.1.0) | 2026-11-12 | Captured `examples/recon-pipeline/` end-to-end run | runs from source |
+| [recon-pipeline-v1.2.0](https://github.com/Abolfazlrwm/Security/releases/tag/recon-pipeline-v1.2.0) | 2026-11-13 | Self-contained dark-themed `report.html` added to every run | runs from source |

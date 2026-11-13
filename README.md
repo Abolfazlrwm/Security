@@ -26,6 +26,9 @@ consolidated pipeline:
 | [hashcrack](hashcrack/) | Python 3 | MD5 / SHA-1 / SHA-256 cracking with wordlists and rule chains |
 | [recon-pipeline](recon-pipeline/) | Python 3 | Chains the tools above and writes markdown, JSON and HTML reports |
 
+Step-by-step tutorials with every flag explained live in
+[docs/tutorials/](docs/tutorials/).
+
 ## Downloads
 
 Release tags build standalone binaries automatically and attach them, with
@@ -153,7 +156,8 @@ Security/
 │   └── integration.py # local end-to-end harness
 ├── docs/
 │   ├── actions.md     # CI/CD pipeline documentation
-│   └── demo.gif       # terminal demo of the tools
+│   ├── demo.gif       # terminal demo of the tools
+│   └── tutorials/     # step-by-step guides for every tool
 ├── SECURITY.md        # how to report vulnerabilities
 ├── CONTRIBUTING.md    # dev setup, gates and release process
 └── Makefile
