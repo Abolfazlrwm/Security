@@ -1,6 +1,6 @@
 # hashcrack - captured runs
 # Targets are digests of weak passwords created for this demo,
-# see demo-hashes.txt. The bundled 80-entry wordlist is used.
+# see demo-hashes.txt. The bundled wordlist is used.
 
 $ python3 hashcrack/hashcrack.py --hashes examples/hashcrack/demo-hashes.txt
 
@@ -12,7 +12,7 @@ $ python3 hashcrack/hashcrack.py --hashes examples/hashcrack/demo-hashes.txt
 -- stderr ----------------------------------------------------------------
 [*] using bundled wordlist hashcrack/wordlists/common-passwords.txt
 [*] 4 target(s) using md5, sha1, sha256
-[*] finished: 3/4 cracked, 80 candidates, 323,576 h/s, 0.0s
+[*] finished: 3/4 cracked, 78 candidates, 299,582 h/s, 0.0s
 # exit code 1: one digest intentionally needs the rule engine
 
 
@@ -25,8 +25,8 @@ $ python3 hashcrack/hashcrack.py --hash 0d491297649a8a4f7768f3e5784c52f1 \
 -- stderr ----------------------------------------------------------------
 [*] using bundled wordlist hashcrack/wordlists/common-passwords.txt
 [*] 1 target(s) using md5
-[*] rules ['capitalize', 'append4'] expand 80 words to ~800,000 candidates
-[*] finished: 1/1 cracked, 22,025 candidates, 783,985 h/s, 0.0s
+[*] rules ['capitalize', 'append4'] expand 78 words to ~780,000 candidates
+[*] finished: 1/1 cracked, 2,025 candidates, 389,433 h/s, 0.0s
 
 
 $ python3 hashcrack/hashcrack.py --hash 6b431529217a4ed5600c7d23247fdac4 \
@@ -38,4 +38,4 @@ $ python3 hashcrack/hashcrack.py --hash 6b431529217a4ed5600c7d23247fdac4 \
 -- stderr ----------------------------------------------------------------
 [*] using bundled wordlist hashcrack/wordlists/common-passwords.txt
 [*] 1 target(s) using md5
-[*] finished: 1/1 cracked, 14 candidates, 232,246 h/s, 0.0s
+[*] finished: 1/1 cracked, 12 candidates, 203,763 h/s, 0.0s

@@ -10,6 +10,7 @@ index.html (Status: 200) [Size: 96]
 robots.txt (Status: 200) [Size: 67]
 sitemap.xml (Status: 200) [Size: 199]
 .git/config (Status: 200) [Size: 104]
+.git/HEAD (Status: 200) [Size: 21]
 admin (Status: 301) [Size: 0]
 api (Status: 301) [Size: 0]
 api/v1 (Status: 301) [Size: 0]
@@ -18,7 +19,6 @@ uploads (Status: 301) [Size: 0]
 phpinfo.php (Status: 200) [Size: 30]
 backup.zip (Status: 200) [Size: 152]
 .env (Status: 200) [Size: 124]
-.git/HEAD (Status: 200) [Size: 21]
 
 -- stderr ----------------------------------------------------------------
 [!] wildcard response detected (status 404, size 335), identical responses are skipped

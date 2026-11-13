@@ -15,7 +15,23 @@ Python and Go with zero third-party dependencies.
 | [subdomain-enum](subdomain-enum/) | Python 3 | Subdomain discovery via crt.sh and threaded DNS brute force |
 | [dirbrute](dirbrute/) | Go | Threaded directory and file brute-forcer with wildcard filtering |
 | [hashcrack](hashcrack/) | Python 3 | MD5 / SHA-1 / SHA-256 cracking with wordlists and rule chains |
-| [recon-pipeline](recon-pipeline/) | Python 3 | Chains the tools above and writes a consolidated report |
+| [recon-pipeline](recon-pipeline/) | Python 3 | Chains the tools above and writes markdown, JSON and HTML reports |
+
+## Downloads
+
+Release tags build standalone binaries automatically and attach them, with
+sha256 checksums, to the matching GitHub release:
+
+| Tool | Platforms | Release |
+| --- | --- | --- |
+| dirbrute | linux (amd64, arm64), macOS (amd64, arm64), windows | [dirbrute-v1.1.1](https://github.com/Abolfazlrwm/Security/releases/tag/dirbrute-v1.1.1) |
+| subdomain-enum | linux, macOS (arm64), windows | [subdomain-enum-v1.2.0](https://github.com/Abolfazlrwm/Security/releases/tag/subdomain-enum-v1.2.0) |
+| hashcrack | linux, macOS (arm64), windows | [hashcrack-v1.1.1](https://github.com/Abolfazlrwm/Security/releases/tag/hashcrack-v1.1.1) |
+
+dirbrute is cross-compiled with the Go toolchain; the Python tools are
+packaged with PyInstaller. Both paths smoke-test every artifact inside the
+release workflow before it gets published, so each binary runs without any
+interpreter, runtime or third-party package.
 
 ## Quick start
 
@@ -49,8 +65,9 @@ $ python3 recon-pipeline/recon.py --domain example.com
 $ python3 recon-pipeline/recon.py --hosts web01,web02 --url https://staging.internal
 ```
 
-Every pipeline run writes `report.md`, `report.json` and the raw tool logs
-into `reports/<target>-<timestamp>/`.
+Every pipeline run writes `report.html` (a self-contained, dark-themed
+report page), `report.md`, `report.json` and the raw tool logs into
+`reports/<target>-<timestamp>/`.
 
 ## Examples
 
@@ -66,9 +83,10 @@ against your own targets.
 
 `tests/integration.py` is a self-contained harness (standard library only)
 that spins up a local demo webserver and verifies the whole toolkit:
-hashcrack sessions (plain lookup, rule chain, salted digest), a full
-dirbrute scan including wildcard filtering, and an end-to-end
-recon-pipeline run:
+hashcrack sessions (plain lookup, rule chain, salted digest and the
+built-in wordlist fallback), a full dirbrute scan including wildcard
+filtering, and an end-to-end recon-pipeline run whose HTML report is
+checked for correctness and self-containment:
 
 ```console
 $ make build
@@ -80,9 +98,9 @@ GitHub Actions runs the harness on every push to `main`, byte-compiles
 the Python tools on 3.11 and 3.12, and runs `gofmt`, `go vet` and `go
 build` on Linux, macOS and Windows. Release tags build downloadable
 binaries automatically: a `dirbrute-v*` tag cross-compiles the Go binary
-for Linux, macOS and Windows, and a `subdomain-enum-v*` tag packages the
-enumerator as standalone executables with PyInstaller. Both attach their
-artifacts and sha256 checksums to the GitHub release.
+for five platforms, and `subdomain-enum-v*` / `hashcrack-v*` tags package
+the Python tools as standalone executables with PyInstaller. Every artifact
+plus its sha256 checksum is attached to the GitHub release.
 
 ## Building
 

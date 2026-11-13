@@ -1,10 +1,10 @@
 {
   "tool": "recon-pipeline",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "target": "http://127.0.0.1:8080",
   "base_url": "http://127.0.0.1:8080",
-  "generated_at": "2026-11-12 12:04 UTC",
-  "tools": "subdomain-enum + dirbrute (pipeline 1.1.0)",
+  "generated_at": "2026-11-13 09:14 UTC",
+  "tools": "subdomain-enum + dirbrute (pipeline 1.2.0)",
   "phases": {
     "subdomains": {
       "ran": false,
@@ -19,9 +19,14 @@
           "count": 13,
           "findings": [
             {
-              "path": "index.html",
+              "path": ".git/config",
               "status": 200,
-              "size": 96
+              "size": 104
+            },
+            {
+              "path": ".env",
+              "status": 200,
+              "size": 124
             },
             {
               "path": "sitemap.xml",
@@ -29,14 +34,14 @@
               "size": 199
             },
             {
+              "path": "index.html",
+              "status": 200,
+              "size": 96
+            },
+            {
               "path": "robots.txt",
               "status": 200,
               "size": 67
-            },
-            {
-              "path": ".env",
-              "status": 200,
-              "size": 124
             },
             {
               "path": "admin",
@@ -45,6 +50,11 @@
             },
             {
               "path": "api",
+              "status": 301,
+              "size": 0
+            },
+            {
+              "path": "api/v1",
               "status": 301,
               "size": 0
             },
@@ -67,16 +77,6 @@
               "path": "backup.zip",
               "status": 200,
               "size": 152
-            },
-            {
-              "path": "api/v1",
-              "status": 301,
-              "size": 0
-            },
-            {
-              "path": ".git/config",
-              "status": 200,
-              "size": 104
             },
             {
               "path": ".git/HEAD",
