@@ -1,6 +1,7 @@
 # Security
 
 [![CI](https://github.com/Abolfazlrwm/Security/actions/workflows/ci.yml/badge.svg)](https://github.com/Abolfazlrwm/Security/actions/workflows/ci.yml)
+[![Release binaries](https://github.com/Abolfazlrwm/Security/actions/workflows/release.yml/badge.svg)](https://github.com/Abolfazlrwm/Security/actions/workflows/release.yml)
 
 A compact toolkit of network reconnaissance and auditing tools, written in
 Python and Go with zero third-party dependencies.
@@ -79,7 +80,7 @@ pipeline report. Each artifact records the exact command that produced
 it, so you can see the expected output shape before running anything
 against your own targets.
 
-## Testing and CI
+## Testing
 
 `tests/integration.py` is a self-contained harness (standard library only)
 that spins up a local demo webserver and verifies the whole toolkit:
@@ -94,13 +95,23 @@ $ python3 tests/integration.py
 ALL CHECKS PASSED
 ```
 
-GitHub Actions runs the harness on every push to `main`, byte-compiles
-the Python tools on 3.11 and 3.12, and runs `gofmt`, `go vet` and `go
-build` on Linux, macOS and Windows. Release tags build downloadable
-binaries automatically: a `dirbrute-v*` tag cross-compiles the Go binary
-for five platforms, and `subdomain-enum-v*` / `hashcrack-v*` tags package
-the Python tools as standalone executables with PyInstaller. Every artifact
-plus its sha256 checksum is attached to the GitHub release.
+## CI/CD (GitHub Actions)
+
+Two workflows keep the toolkit green and ship the binaries. The full
+pipeline documentation — job matrices, artifact naming, release routing —
+lives in [docs/actions.md](docs/actions.md):
+
+| Workflow | Trigger | Result |
+| --- | --- | --- |
+| [CI](https://github.com/Abolfazlrwm/Security/actions/workflows/ci.yml) | every push / PR to `main` | Python tools byte-compiled and smoke-tested on 3.11 / 3.12, dirbrute checked with `gofmt`, `go vet` and `go build` on Linux, macOS and Windows, then the full integration harness |
+| [Release binaries](https://github.com/Abolfazlrwm/Security/actions/workflows/release.yml) | tags `dirbrute-v*`, `subdomain-enum-v*`, `hashcrack-v*` | standalone binaries for every supported platform, each smoke-tested before publish, attached to the GitHub release with sha256 checksums |
+
+To cut a release, push an annotated tag and the workflow does the rest:
+
+```console
+$ git tag -a dirbrute-v1.2.0 -m "dirbrute 1.2.0"
+$ git push origin dirbrute-v1.2.0
+```
 
 ## Building
 
@@ -132,6 +143,8 @@ Security/
 ├── examples/          # captured output from real runs
 ├── tests/
 │   └── integration.py # local end-to-end harness
+├── docs/
+│   └── actions.md     # CI/CD pipeline documentation
 └── Makefile
 ```
 
