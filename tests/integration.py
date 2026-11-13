@@ -3,9 +3,11 @@
 
 Runs the three network-free code paths end to end:
 
-* hashcrack      - plain lookup, rule chain and salted digest sessions
+* hashcrack      - plain lookup, rule chain, salted digests and the
+                   built-in wordlist fallback
 * dirbrute       - a full scan against an in-process demo webserver
-* recon-pipeline - a --hosts run that chains the built binary
+* recon-pipeline - a --hosts run that chains the built binary and also
+                   verifies the self-contained HTML report
 
 subdomain-enum is exercised only through its --help page because a real
 run needs live DNS and crt.sh access, which CI must not depend on.
@@ -150,6 +152,19 @@ def test_hashcrack() -> None:
     check("prefix salt cracks salt123admin",
           proc.returncode == 0 and "-> salt123admin" in proc.stdout)
 
+    driver = (
+        "import sys; sys.path.insert(0, r'%s')\n"
+        "import hashcrack\n"
+        "from pathlib import Path\n"
+        "hashcrack.DEFAULT_WORDLIST = Path('does-not-exist.txt')\n"
+        "sys.exit(hashcrack.main(['--hash', '21232f297a57a5a743894a0e4a801fc3']))\n"
+        % str(REPO_ROOT / "hashcrack")
+    )
+    proc = run([sys.executable, "-c", driver])
+    check("built-in wordlist fallback cracks 'admin' with no wordlist file",
+          proc.returncode == 0 and "-> admin" in proc.stdout
+          and "built-in list" in proc.stderr, proc.stderr[-160:])
+
 
 def test_dirbrute(port: int) -> None:
     print("\n== dirbrute ==", flush=True)
@@ -182,7 +197,18 @@ def test_pipeline(port: int, workdir: Path) -> None:
               "host list provided via --hosts" in report)
         data = json.loads(reports[0].with_name("report.json").read_text())
         check("report.json carries version and findings",
-              data.get("version") == "1.1.0" and data["summary"]["findings"] == 13)
+              data.get("version") == "1.2.0" and data["summary"]["findings"] == 13)
+
+        html_report = reports[0].with_name("report.html")
+        if html_report.exists():
+            page = html_report.read_text(encoding="utf-8")
+            check("report.html renders the findings with status pills",
+                  '<code>.env</code>' in page and 'class="pill ok"' in page)
+            check("report.html is self-contained (no external assets)",
+                  "<script" not in page and "<link" not in page
+                  and "cdn." not in page and "recon-pipeline 1.2.0" in page)
+        else:
+            check("report.html exists", False)
 
 
 def test_help_pages() -> None:
