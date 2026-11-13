@@ -18,6 +18,9 @@ Uses only the Python standard library.
   it easy to script around.
 - **Bounded rules** — an estimate of the candidate count is printed before
   the run so an `append4` chain on a big wordlist never surprises you.
+- **Standalone ready** — when no wordlist file is around it falls back to a
+  built-in 78-entry password list, so the PyInstaller binary (or a checkout
+  without `wordlists/`) still works out of the box.
 
 ## Usage
 
@@ -53,7 +56,7 @@ $ python3 hashcrack.py --hashes targets.txt --rules append2 -o found.txt
 | --- | --- | --- |
 | `--hash` | Target digest, repeatable | — |
 | `--hashes` | File with one digest per line | — |
-| `-w, --wordlist` | Wordlist file | bundled `wordlists/common-passwords.txt` |
+| `-w, --wordlist` | Wordlist file | bundled `wordlists/common-passwords.txt`, then the built-in list |
 | `--rules` | Comma separated rule chain | none |
 | `--type` | Force `md5`, `sha1` or `sha256` | auto by length |
 | `--salt` | Salt for every candidate | none |

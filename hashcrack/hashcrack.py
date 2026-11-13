@@ -17,7 +17,7 @@ import time
 from pathlib import Path
 
 TOOL_NAME = "hashcrack"
-TOOL_VERSION = "1.1.0"
+TOOL_VERSION = "1.1.1"
 
 ALGOS = ("md5", "sha1", "sha256")
 ALGO_BY_LENGTH = {32: "md5", 40: "sha1", 64: "sha256"}
@@ -38,6 +38,24 @@ RULES = {
 
 DEFAULT_WORDLIST = Path(__file__).resolve().parent / "wordlists" / "common-passwords.txt"
 PROGRESS_INTERVAL = 2.0  # seconds between progress lines on stderr
+
+# Mirror of wordlists/common-passwords.txt. It keeps the tool (and the
+# PyInstaller standalone binary) usable even when no wordlist file is around.
+BUILTIN_WORDLIST: tuple[str, ...] = (
+    "password", "123456", "123456789", "12345678", "12345", "1234567",
+    "1234567890", "qwerty", "abc123", "password1", "password123", "admin",
+    "admin123", "letmein", "welcome", "welcome1", "monkey", "login",
+    "dragon", "passw0rd", "master", "hello", "freedom", "whatever",
+    "qazwsx", "trustno1", "iloveyou", "P@ssw0rd", "p@ssw0rd", "Password1",
+    "Password123", "shadow", "superman", "batman", "michael", "football",
+    "baseball", "hockey", "soccer", "starwars", "princess", "jennifer",
+    "jordan", "harley", "ranger", "hunter", "buster", "thomas", "robert",
+    "charlie", "andrew", "daniel", "matrix", "111111", "000000", "121212",
+    "654321", "abcdef", "google", "samsung", "laptop", "coffee",
+    "chocolate", "cookie", "summer", "winter", "killer", "george",
+    "access", "love", "secret", "test", "guest", "user", "root", "toor",
+    "oracle", "changeme",
+)
 
 
 def info(message: str) -> None:
@@ -69,18 +87,34 @@ def estimate_candidates(word_count: int, rules: list[str]) -> int:
     return word_count * factor
 
 
-def load_wordlist(path: str | None) -> Path:
-    """Resolve the wordlist path, defaulting to the bundled password list."""
+def word_stream(wordlist: Path | None):
+    """Yield words from a wordlist file, or the built-in list.
+
+    Blank lines and ``#`` comments are skipped; the built-in list has
+    neither, so this only applies to file-based wordlists.
+    """
+    if wordlist is not None:
+        with open(wordlist, encoding="utf-8", errors="replace") as handle:
+            for line in handle:
+                stripped = line.strip()
+                if stripped and not stripped.startswith("#"):
+                    yield line
+    else:
+        yield from BUILTIN_WORDLIST
+
+
+def load_wordlist(path: str | None) -> Path | None:
+    """Resolve the wordlist path, falling back to the built-in list."""
     if path:
         chosen = Path(path)
-    elif DEFAULT_WORDLIST.exists():
-        chosen = DEFAULT_WORDLIST
-        info(f"using bundled wordlist {chosen}")
-    else:
-        raise SystemExit("error: no wordlist found, pass one with --wordlist")
-    if not chosen.is_file():
-        raise SystemExit(f"error: wordlist not found: {chosen}")
-    return chosen
+        if not chosen.is_file():
+            raise SystemExit(f"error: wordlist not found: {chosen}")
+        return chosen
+    if DEFAULT_WORDLIST.exists():
+        info(f"using bundled wordlist {DEFAULT_WORDLIST}")
+        return DEFAULT_WORDLIST
+    info(f"no wordlist file found, using the built-in list ({len(BUILTIN_WORDLIST)} entries)")
+    return None
 
 
 def load_targets(hash_values: list[str] | None, hash_file: str | None, algo: str | None) -> tuple[dict[str, str], list[str]]:
@@ -136,27 +170,26 @@ def crack(
     started = time.monotonic()
     last_report = started
 
-    with open(wordlist, encoding="utf-8", errors="replace") as handle:
-        for line in handle:
-            word = line.rstrip("\r\n")
-            if not word:
-                continue
-            for variant in variants(word, rules):
-                candidate = apply_salt(variant, salt, salt_position) if salt else variant
-                data = candidate.encode("utf-8", "surrogatepass")
-                candidates += 1
-                for algo in algos:
-                    digest = hashlib.new(algo, data).hexdigest()
-                    if digest in targets and digest not in matched:
-                        matched[digest] = (candidate, targets[digest])
-                        print(f"[+] cracked {targets[digest]} -> {candidate}")
-                if len(matched) == len(targets):
-                    return matched, candidates, time.monotonic() - started
-            if not quiet and time.monotonic() - last_report >= PROGRESS_INTERVAL:
-                elapsed = time.monotonic() - started
-                rate = candidates / elapsed if elapsed else 0.0
-                info(f"{candidates:,} candidates, {rate:,.0f} h/s, {len(matched)}/{len(targets)} cracked")
-                last_report = time.monotonic()
+    for line in word_stream(wordlist):
+        word = line.rstrip("\r\n")
+        if not word:
+            continue
+        for variant in variants(word, rules):
+            candidate = apply_salt(variant, salt, salt_position) if salt else variant
+            data = candidate.encode("utf-8", "surrogatepass")
+            candidates += 1
+            for algo in algos:
+                digest = hashlib.new(algo, data).hexdigest()
+                if digest in targets and digest not in matched:
+                    matched[digest] = (candidate, targets[digest])
+                    print(f"[+] cracked {targets[digest]} -> {candidate}")
+            if len(matched) == len(targets):
+                return matched, candidates, time.monotonic() - started
+        if not quiet and time.monotonic() - last_report >= PROGRESS_INTERVAL:
+            elapsed = time.monotonic() - started
+            rate = candidates / elapsed if elapsed else 0.0
+            info(f"{candidates:,} candidates, {rate:,.0f} h/s, {len(matched)}/{len(targets)} cracked")
+            last_report = time.monotonic()
 
     return matched, candidates, time.monotonic() - started
 
@@ -169,7 +202,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     )
     parser.add_argument("--hash", action="append", metavar="DIGEST", help="target digest, repeatable")
     parser.add_argument("--hashes", metavar="FILE", help="file with one digest per line")
-    parser.add_argument("-w", "--wordlist", help="wordlist (default: bundled common-passwords.txt)")
+    parser.add_argument("-w", "--wordlist", help="wordlist (default: bundled common-passwords.txt, then the built-in list)")
     parser.add_argument(
         "--rules", default="",
         help="comma separated rule chain applied in order (e.g. capitalize,append2)",
@@ -198,8 +231,7 @@ def main(argv: list[str] | None = None) -> int:
 
     if not args.quiet:
         info(f"{len(targets)} target(s) using {', '.join(algos)}")
-    with open(wordlist, encoding="utf-8", errors="replace") as handle:
-        word_count = sum(1 for line in handle if line.strip("\r\n"))
+    word_count = sum(1 for line in word_stream(wordlist) if line.strip("\r\n"))
     if not args.quiet and args.rules:
         info(f"rules {args.rules} expand {word_count:,} words to ~{estimate_candidates(word_count, args.rules):,} candidates")
 
