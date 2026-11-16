@@ -58,20 +58,32 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       tool: ${{ steps.pick.outputs.tool }}
-      tools: ${{ steps.pick.outputs.tools }}
+      matrix: ${{ steps.pick.outputs.matrix }}
     steps:
       - id: pick
         run: |
+          platforms='[
+            {"os": "ubuntu-latest",  "platform": "linux-x86_64"},
+            {"os": "macos-latest",   "platform": "macos-arm64"},
+            {"os": "windows-latest", "platform": "windows-x86_64"}
+          ]'
           case "${GITHUB_REF_NAME}" in
-            subdomain-enum-v*) tool="subdomain-enum"; tools='["subdomain-enum"]';;
-            hashcrack-v*)      tool="hashcrack";      tools='["hashcrack"]';;
-            port-scanner-v*)   tool="port-scanner";   tools='["port-scanner"]';;
-            takeover-check-v*) tool="takeover-check"; tools='["takeover-check"]';;
-            web-audit-v*)      tool="web-audit";      tools='["web-audit"]';;
-            *)                 tool="";               tools='[]';;
+            subdomain-enum-v*) tool="subdomain-enum";;
+            hashcrack-v*)      tool="hashcrack";;
+            port-scanner-v*)   tool="port-scanner";;
+            takeover-check-v*) tool="takeover-check";;
+            web-audit-v*)      tool="web-audit";;
+            *)                 tool="";;
           esac
+          if [ -n "$tool" ]; then
+            # one matrix entry per platform, all pinned to the released tool
+            matrix=$(PLATFORMS="$platforms" TOOL="$tool" python3 -c "import json, os; ps = json.loads(os.environ['PLATFORMS']); print(json.dumps([dict(tool=os.environ['TOOL'], **p) for p in ps]))")
+          else
+            matrix="[]"
+          fi
           echo "tool=$tool" >> "$GITHUB_OUTPUT"
-          echo "tools=$tools" >> "$GITHUB_OUTPUT"
+          echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
+          echo "releasing: $tool, matrix: $matrix"
 
   python-tool:
     name: Build ${{ matrix.tool }} (${{ matrix.platform }})
@@ -81,14 +93,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        tool: ${{ fromJSON(needs.plan.outputs.tools) }}
-        include:
-          - os: ubuntu-latest
-            platform: linux-x86_64
-          - os: macos-latest
-            platform: macos-arm64
-          - os: windows-latest
-            platform: windows-x86_64
+        include: ${{ fromJSON(needs.plan.outputs.matrix) }}
     steps:
       - uses: actions/checkout@v4
 
