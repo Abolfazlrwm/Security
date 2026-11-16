@@ -42,6 +42,9 @@ jobs:
           python3 subdomain-enum/subdomain_enum.py --help > /dev/null
           python3 recon-pipeline/recon.py --help > /dev/null
 
+      - name: Unit tests
+        run: python -m unittest discover -s tests/unit -v
+
   go-tool:
     name: Go tool (${{ matrix.os }})
     runs-on: ${{ matrix.os }}
@@ -73,6 +76,9 @@ jobs:
       - name: go vet
         run: go vet ./...
 
+      - name: go test
+        run: go test ./...
+
       - name: go build
         run: go build -o dirbrute .
 
@@ -93,6 +99,9 @@ jobs:
 
       - name: Build dirbrute
         run: make build
+
+      - name: Unit tests
+        run: python3 -m unittest discover -s tests/unit
 
       - name: Run integration harness
         run: python3 tests/integration.py

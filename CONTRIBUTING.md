@@ -35,7 +35,7 @@ chain, salted digest, built-in wordlist fallback), drives a real
 dirbrute scan including wildcard filtering, and finishes with an
 end-to-end recon-pipeline run whose HTML report is validated. If your
 change touches any tool the harness must pass; if it adds behaviour,
-extend the harness to cover it.
+extend the unit tests in `tests/unit/` (and the harness) to cover it.
 
 ## Commit style
 
@@ -60,10 +60,14 @@ fine. One logical change per commit keeps release bisecting possible.
 
    | Gate | Command |
    | --- | --- |
+   | Python unit tests | `make test` |
    | Python syntax (all tools) | `python -m compileall subdomain-enum hashcrack recon-pipeline` |
    | Go formatting (hard tabs, no CRLF) | `gofmt -l dirbrute` must print nothing |
+   | Go unit tests | `make gotest` |
    | Go vet and build | `cd dirbrute && go vet ./... && go build -o dirbrute .` |
    | Integration harness | `python3 tests/integration.py` |
+
+   One command for everything: `make check`.
 
 4. Open the PR with a short description of what changed and why.
 

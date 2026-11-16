@@ -93,18 +93,37 @@ against your own targets.
 
 ## Testing
 
-`tests/integration.py` is a self-contained harness (standard library only)
-that spins up a local demo webserver and verifies the whole toolkit:
-hashcrack sessions (plain lookup, rule chain, salted digest and the
-built-in wordlist fallback), a full dirbrute scan including wildcard
-filtering, and an end-to-end recon-pipeline run whose HTML report is
-checked for correctness and self-containment:
+Two layers of tests keep the toolkit honest (both use the standard
+library only):
+
+**Unit tests** — `tests/unit/` covers the pure code paths: hashcrack's
+rule engine, salting, target loading and algorithm auto-detection;
+subdomain-enum's domain normalisation, label loading and report
+writing; recon-pipeline's dirbrute output parsing, host collection and
+the Markdown/HTML renderers (including HTML escaping); and, on the Go
+side, dirbrute's flag parsing, wordlist handling, candidate building
+and wildcard filtering. Run them with:
+
+```console
+$ make test      # Python unit tests
+$ make gotest    # Go unit tests
+```
+
+**Integration harness** — `tests/integration.py` is a self-contained
+harness that spins up a local demo webserver and verifies the whole
+toolkit: hashcrack sessions (plain lookup, rule chain, salted digest
+and the built-in wordlist fallback), a full dirbrute scan including
+wildcard filtering, and an end-to-end recon-pipeline run whose HTML
+report is checked for correctness and self-containment:
 
 ```console
 $ make build
 $ python3 tests/integration.py
 ALL CHECKS PASSED
 ```
+
+`make check` runs all three gates in one go — the same set CI executes
+on every push.
 
 ## CI/CD (GitHub Actions)
 
@@ -153,7 +172,8 @@ Security/
 │   └── recon.py
 ├── examples/          # captured output from real runs
 ├── tests/
-│   └── integration.py # local end-to-end harness
+│   ├── integration.py # local end-to-end harness
+│   └── unit/          # stdlib unittest suites for the pure code paths
 ├── docs/
 │   ├── actions.md     # CI/CD pipeline documentation
 │   ├── demo.gif       # terminal demo of the tools
