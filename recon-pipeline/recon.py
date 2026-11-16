@@ -471,12 +471,13 @@ def render_html(report: dict) -> str:
             blocks = []
             for host, data in ports.get("hosts", {}).items():
                 rows = []
+                no_banner_cell = '<span class="muted">no banner</span>'
                 for entry in data.get("ports", []):
                     banner = str(entry.get("banner", "")).replace("\n", " ")
                     rows.append(
                         f'<tr><td><code>{esc(str(entry["port"]))}/tcp</code></td>'
                         f'<td>{esc(entry["service"])}</td>'
-                        f'<td>{esc(banner[:56]) if banner else "<span class=\'muted\'>no banner</span>"}</td></tr>'
+                        f'<td>{esc(banner[:56]) if banner else no_banner_cell}</td></tr>'
                     )
                 body = "".join(rows) or '<tr><td colspan="3" class="muted">no open ports in the top-100 list</td></tr>'
                 blocks.append(
