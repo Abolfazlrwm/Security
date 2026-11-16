@@ -15,7 +15,7 @@ finished products land on
 | Workflow | File | Trigger | What it does |
 | --- | --- | --- | --- |
 | CI | [.github/workflows/ci.yml](../.github/workflows/ci.yml) | push to `main`, pull requests to `main`, manual dispatch | Byte-compiles and smoke-tests the Python tools on 3.11 and 3.12, lints and builds dirbrute on Linux, macOS and Windows, then runs the full integration harness |
-| Release binaries | [.github/workflows/release.yml](../.github/workflows/release.yml) | tags `dirbrute-v*`, `subdomain-enum-v*`, `hashcrack-v*`, `port-scanner-v*`, `takeover-check-v*`, `web-audit-v*` | Builds standalone binaries for every supported platform, smoke-tests each one, and attaches them plus sha256 checksums to the GitHub release |
+| Release binaries | [.github/workflows/release.yml](../.github/workflows/release.yml) | tags `dirbrute-v*`, `subdomain-enum-v*`, `hashcrack-v*`, `port-scanner-v*`, `takeover-check-v*`, `web-audit-v*`, `jwt-analyzer-v*`, `cve-lookup-v*` | Builds standalone binaries for every supported platform, smoke-tests each one, and attaches them plus sha256 checksums to the GitHub release |
 
 Both workflows stick to first-party actions — `actions/checkout`,
 `actions/setup-python`, `actions/setup-go`, `actions/upload-artifact`,
@@ -38,7 +38,7 @@ flowchart TD
     subgraph REL["Release binaries workflow"]
         PLAN["plan: pick the tool<br/>from the tag name"]
         B1["dirbrute: Go cross-compile<br/>5 platforms"]
-        B2["python-tool matrix: PyInstaller<br/>3 platforms x 5 tools"]
+        B2["python-tool matrix: PyInstaller<br/>3 platforms x 7 tools"]
         ATT["attach: checksums + release upload"]
         PLAN --> B1
         PLAN --> B2
@@ -54,7 +54,7 @@ flowchart TD
 
 | Job | Matrix | Steps |
 | --- | --- | --- |
-| `python-tools` | Python 3.11 and 3.12 on ubuntu-latest | `python -m compileall` across all six Python tools, hashcrack smoke tests (plain lookup and a rule chain), a localhost port-scanner pass, `--help` smoke tests for every tool |
+| `python-tools` | Python 3.11 and 3.12 on ubuntu-latest | `python -m compileall` across all eight Python tools, hashcrack smoke tests (plain lookup and a rule chain), a localhost port-scanner pass, an offline jwt-analyzer smoke test (crack + alg-none flags), `--help` smoke tests for every tool |
 | `go-tool` | ubuntu-latest, macos-latest, windows-latest | force LF line endings (Windows runners otherwise break `gofmt`), `gofmt -l` check, `go vet ./...`, `go build` |
 | `integration` | ubuntu-latest | `make build`, then `python3 tests/integration.py` — the harness starts a local demo webserver and exercises the whole toolkit end to end |
 
@@ -91,10 +91,10 @@ silently publishing an incomplete set.
 
 ### The Python tools (PyInstaller matrix)
 
-All five packaged Python tools — subdomain-enum, hashcrack, port-scanner,
-takeover-check and web-audit — share one matrix job driven by the plan
-output: `linux-x86_64` (ubuntu-latest), `macos-arm64` (macos-latest),
-`windows-x86_64` (windows-latest):
+All seven packaged Python tools — subdomain-enum, hashcrack, port-scanner,
+takeover-check, web-audit, jwt-analyzer and cve-lookup — share one matrix
+job driven by the plan output: `linux-x86_64` (ubuntu-latest),
+`macos-arm64` (macos-latest), `windows-x86_64` (windows-latest):
 
 1. `pyinstaller --onefile --clean --noconfirm` builds a standalone binary
    named `<tool>-<version>-<platform>` from the tool's script.
@@ -161,6 +161,8 @@ attached automatically.
 | [port-scanner-v1.0.0](https://github.com/Abolfazlrwm/Security/releases/tag/port-scanner-v1.0.0) | 2026-11-16 | First release: thread-pool TCP connect scanner over a curated top-100 list with banner grab and service names | 3 platforms + checksums |
 | [takeover-check-v1.0.0](https://github.com/Abolfazlrwm/Security/releases/tag/takeover-check-v1.0.0) | 2026-11-16 | First release: takeover fingerprints for 17 hosting services (CNAME pattern + unclaimed-page signature), accepts subdomain-enum JSON | 3 platforms + checksums |
 | [web-audit-v1.0.0](https://github.com/Abolfazlrwm/Security/releases/tag/web-audit-v1.0.0) | 2026-11-16 | First release: TLS + security-header + cookie audit with a deterministic 0-100 score and letter grade | 3 platforms + checksums |
+| [jwt-analyzer-v1.0.0](https://github.com/Abolfazlrwm/Security/releases/tag/jwt-analyzer-v1.0.0) | 2026-11-16 | First release: offline JWT audit — decode, HMAC verification, 70-secret dictionary attack, `alg: none` and claim findings, bundled secrets wordlist | 3 platforms + checksums |
+| [cve-lookup-v1.0.0](https://github.com/Abolfazlrwm/Security/releases/tag/cve-lookup-v1.0.0) | 2026-11-16 | First release: NVD CVE API 2.0 lookups by banner (verified vendor CPE map), keyword, CVE id and `--from-scan` port-scanner reports | 3 platforms + checksums |
 | [recon-pipeline-v1.0.0](https://github.com/Abolfazlrwm/Security/releases/tag/recon-pipeline-v1.0.0) | 2026-11-12 | First release: chains the tools, writes `report.md` + `report.json` + raw logs | runs from source |
 | [recon-pipeline-v1.1.0](https://github.com/Abolfazlrwm/Security/releases/tag/recon-pipeline-v1.1.0) | 2026-11-12 | Captured `examples/recon-pipeline/` end-to-end run | runs from source |
 | [recon-pipeline-v1.2.0](https://github.com/Abolfazlrwm/Security/releases/tag/recon-pipeline-v1.2.0) | 2026-11-13 | Self-contained dark-themed `report.html` added to every run | runs from source |
