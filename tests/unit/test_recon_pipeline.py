@@ -131,7 +131,7 @@ class RenderTests(unittest.TestCase):
         self.assertNotIn("<script", html)
         self.assertNotIn("<link", html)
         self.assertNotIn("cdn.", html)
-        self.assertIn("recon-pipeline 1.2.0", html)
+        self.assertIn(f"recon-pipeline {recon.TOOL_VERSION}", html)
         self.assertIn('class="pill ok"', html)
         self.assertIn('class="pill redir"', html)
 
@@ -152,6 +152,60 @@ class RenderTests(unittest.TestCase):
         # the HTML must embed the same count as the markdown
         self.assertIn(str(report["summary"]["findings"]),
                       re.sub(r"<[^>]+>", "", recon.render_html(report)))
+
+    def test_new_phase_sections_render(self):
+        report = self.make_report()
+        report["phases"]["ports"] = {
+            "ran": True,
+            "hosts": {
+                "example.com": {
+                    "ip": "93.184.216.34", "open_count": 2,
+                    "ports": [
+                        {"port": 80, "state": "open", "service": "http", "banner": ""},
+                        {"port": 443, "state": "open", "service": "https", "banner": ""},
+                    ],
+                }
+            },
+        }
+        report["phases"]["audit"] = {
+            "ran": True,
+            "urls": {
+                "https://example.com": {
+                    "score": 64, "grade": "C",
+                    "findings": [
+                        {"check": "tls", "status": "ok", "detail": "valid"},
+                        {"check": "content-security-policy", "status": "missing",
+                         "detail": "start with a report-only CSP"},
+                    ],
+                }
+            },
+        }
+        report["summary"]["open_ports"] = 2
+        report["summary"]["audit_score"] = 64
+        report["summary"]["audit_grade"] = "C"
+
+        md = recon.render_markdown(report)
+        self.assertIn("## Port scan", md)
+        self.assertIn("example.com (2 open)", md)
+        self.assertIn("443/tcp | https", md)
+        self.assertIn("## Web audit", md)
+        self.assertIn("64/100 (grade C)", md)
+
+        page = recon.render_html(report)
+        self.assertIn("<h2>Port scan</h2>", page)
+        self.assertIn("<h2>Web audit</h2>", page)
+        self.assertIn("grade C", page)
+        self.assertIn('class="pill auth"', page)
+        self.assertIn("no banner", page)
+
+    def test_old_reports_without_new_phases_still_render(self):
+        report = self.make_report()  # no ports/audit keys at all
+        md = recon.render_markdown(report)
+        page = recon.render_html(report)
+        self.assertNotIn("Port scan", md)
+        self.assertNotIn("Web audit", md)
+        self.assertNotIn("<h2>Port scan</h2>", page)
+        self.assertNotIn("<h2>Web audit</h2>", page)
 
 
 class LocateDirbruteTests(unittest.TestCase):

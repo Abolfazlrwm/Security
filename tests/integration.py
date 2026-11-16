@@ -1,16 +1,19 @@
 #!/usr/bin/env python3
 """Self-contained integration test for the Security toolkit.
 
-Runs the three network-free code paths end to end:
+Runs the network-free code paths end to end:
 
 * hashcrack      - plain lookup, rule chain, salted digests and the
                    built-in wordlist fallback
 * dirbrute       - a full scan against an in-process demo webserver
+* port-scanner   - a live scan of the demo webserver port (open + closed)
+* web-audit      - a header/score audit of the demo webserver over http
 * recon-pipeline - a --hosts run that chains the built binary and also
                    verifies the self-contained HTML report
 
-subdomain-enum is exercised only through its --help page because a real
-run needs live DNS and crt.sh access, which CI must not depend on.
+subdomain-enum and takeover-check are exercised only through their --help
+pages because a real run needs live DNS and third-party HTTP access,
+which CI must not depend on.
 
 Exit code 0 means every assertion passed. Standard library only.
 """
@@ -197,18 +200,24 @@ def test_pipeline(port: int, workdir: Path) -> None:
         check("report lists 13 findings", "(13 findings)" in report)
         check("report records skipped subdomain phase",
               "host list provided via --hosts" in report)
+        check("report contains the new port scan and web audit sections",
+              "## Port scan" in report and "## Web audit" in report
+              and "grade F" in report)
         data = json.loads(reports[0].with_name("report.json").read_text())
         check("report.json carries version and findings",
-              data.get("version") == "1.2.0" and data["summary"]["findings"] == 13)
+              data.get("version") == "1.3.0" and data["summary"]["findings"] == 13
+              and "open_ports" in data["summary"])
 
         html_report = reports[0].with_name("report.html")
         if html_report.exists():
             page = html_report.read_text(encoding="utf-8")
             check("report.html renders the findings with status pills",
                   '<code>.env</code>' in page and 'class="pill ok"' in page)
+            check("report.html embeds the new sections",
+                  "<h2>Port scan</h2>" in page and "<h2>Web audit</h2>" in page)
             check("report.html is self-contained (no external assets)",
                   "<script" not in page and "<link" not in page
-                  and "cdn." not in page and "recon-pipeline 1.2.0" in page)
+                  and "cdn." not in page and "recon-pipeline 1.3.0" in page)
         else:
             check("report.html exists", False)
 
@@ -219,9 +228,64 @@ def test_help_pages() -> None:
                 "--help"])
     check("subdomain-enum --help exits zero",
           proc.returncode == 0 and "--no-crtsh" in proc.stdout)
+    proc = run([sys.executable, str(REPO_ROOT / "takeover-check" / "takeover_check.py"),
+                "--help"])
+    check("takeover-check --help exits zero",
+          proc.returncode == 0 and "--file" in proc.stdout)
+    proc = run([sys.executable, str(REPO_ROOT / "port-scanner" / "port_scanner.py"),
+                "--help"])
+    check("port-scanner --help exits zero",
+          proc.returncode == 0 and "--no-banner" in proc.stdout)
+    proc = run([sys.executable, str(REPO_ROOT / "web-audit" / "web_audit.py"), "--help"])
+    check("web-audit --help exits zero",
+          proc.returncode == 0 and "--format" in proc.stdout)
     proc = run([sys.executable, str(REPO_ROOT / "recon-pipeline" / "recon.py"), "--help"])
     check("recon-pipeline --help exits zero",
-          proc.returncode == 0 and "--max-hosts" in proc.stdout)
+          proc.returncode == 0 and "--skip-ports" in proc.stdout)
+
+
+def test_port_scanner(port: int) -> None:
+    print("\n== port-scanner ==", flush=True)
+    script = REPO_ROOT / "port-scanner" / "port_scanner.py"
+    proc = run([sys.executable, str(script), "127.0.0.1",
+                "--ports", str(port), "--timeout", "1"])
+    check("finds the demo webserver port open",
+          proc.returncode == 0 and f"{port}/tcp" in proc.stdout
+          and "1 open of 1 scanned" in proc.stdout,
+          proc.stdout[-160:])
+    closed = port + 1
+    proc = run([sys.executable, str(script), "127.0.0.1",
+                "--ports", str(closed), "--timeout", "1"])
+    check("closed port is reported as no open ports",
+          proc.returncode == 0 and "0 open of 1 scanned" in proc.stdout, proc.stdout[-120:])
+    with tempfile.TemporaryDirectory(prefix="ps-json") as tmp:
+        output = Path(tmp) / "scan.json"
+        proc = run([sys.executable, str(script), "127.0.0.1",
+                    "--ports", str(port), "--format", "json", "--output", str(output)])
+        data = json.loads(output.read_text()) if output.exists() else {}
+        check("json report carries the open port",
+              data.get("open_count") == 1 and data["ports"][0]["port"] == port
+              and data.get("ip"),)
+
+
+def test_web_audit(port: int) -> None:
+    print("\n== web-audit ==", flush=True)
+    script = REPO_ROOT / "web-audit" / "web_audit.py"
+    proc = run([sys.executable, str(script), f"http://127.0.0.1:{port}"])
+    check("plain HTTP target is flagged", proc.returncode == 0 and "plain HTTP" in proc.stdout,
+          proc.stdout[-160:])
+    check("security headers are audited",
+          all(h in proc.stdout for h in ("strict-transport-security",
+                                         "content-security-policy")))
+    check("score line printed", "Web audit score:" in proc.stdout)
+    with tempfile.TemporaryDirectory(prefix="wa-json") as tmp:
+        output = Path(tmp) / "audit.json"
+        proc = run([sys.executable, str(script), f"http://127.0.0.1:{port}",
+                    "--format", "json", "--output", str(output)])
+        data = json.loads(output.read_text()) if output.exists() else {}
+        check("json report carries tool, score and findings",
+              data.get("tool") == "web-audit" and isinstance(data.get("score"), int)
+              and len(data.get("findings", [])) >= 6)
 
 
 def main() -> int:
@@ -234,6 +298,8 @@ def main() -> int:
         test_help_pages()
         test_hashcrack()
         test_dirbrute(port)
+        test_port_scanner(port)
+        test_web_audit(port)
         test_pipeline(port, workroot / "reports")
     finally:
         server.shutdown()

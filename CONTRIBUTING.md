@@ -32,7 +32,8 @@ ALL CHECKS PASSED
 `tests/integration.py` is self-contained (standard library only): it
 starts a local demo webserver, runs hashcrack (plain lookup, rule
 chain, salted digest, built-in wordlist fallback), drives a real
-dirbrute scan including wildcard filtering, and finishes with an
+dirbrute scan including wildcard filtering, scans and audits the demo
+server with port-scanner and web-audit, and finishes with an
 end-to-end recon-pipeline run whose HTML report is validated. If your
 change touches any tool the harness must pass; if it adds behaviour,
 extend the unit tests in `tests/unit/` (and the harness) to cover it.
@@ -61,7 +62,7 @@ fine. One logical change per commit keeps release bisecting possible.
    | Gate | Command |
    | --- | --- |
    | Python unit tests | `make test` |
-   | Python syntax (all tools) | `python -m compileall subdomain-enum hashcrack recon-pipeline` |
+   | Python syntax (all tools) | `python -m compileall subdomain-enum hashcrack recon-pipeline port-scanner takeover-check web-audit` |
    | Go formatting (hard tabs, no CRLF) | `gofmt -l dirbrute` must print nothing |
    | Go unit tests | `make gotest` |
    | Go vet and build | `cd dirbrute && go vet ./... && go build -o dirbrute .` |
@@ -80,7 +81,8 @@ tree — CI enforces it. The full CI/CD pipeline is documented in
 
 Releases are tag-driven; the workflow builds and attaches the binaries
 automatically. Tag names must match `<tool>-v<semver>` where tool is
-`dirbrute`, `subdomain-enum` or `hashcrack`:
+`dirbrute`, `subdomain-enum`, `hashcrack`, `port-scanner`,
+`takeover-check` or `web-audit`:
 
 ```console
 $ git tag -a dirbrute-v1.2.0 -m "dirbrute 1.2.0"

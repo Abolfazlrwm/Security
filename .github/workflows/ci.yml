@@ -27,7 +27,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
 
       - name: Byte-compile every tool
-        run: python -m compileall subdomain-enum hashcrack recon-pipeline
+        run: python -m compileall subdomain-enum hashcrack recon-pipeline port-scanner takeover-check web-audit
 
       - name: hashcrack smoke test (plain lookup)
         run: |
@@ -40,7 +40,14 @@ jobs:
       - name: CLI help pages
         run: |
           python3 subdomain-enum/subdomain_enum.py --help > /dev/null
+          python3 port-scanner/port_scanner.py --help > /dev/null
+          python3 takeover-check/takeover_check.py --help > /dev/null
+          python3 web-audit/web_audit.py --help > /dev/null
           python3 recon-pipeline/recon.py --help > /dev/null
+
+      - name: port-scanner smoke test (localhost)
+        run: |
+          python3 port-scanner/port_scanner.py 127.0.0.1 --ports 9 --timeout 0.5 --no-banner
 
       - name: Unit tests
         run: python -m unittest discover -s tests/unit -v
