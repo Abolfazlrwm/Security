@@ -1,14 +1,26 @@
 # recon-pipeline - captured run
 # Same local demo webserver as examples/dirbrute/local-run.txt.
 # The host was passed with --hosts, so the subdomain phase is
-# recorded as skipped; a live subdomain-phase capture is in
-# examples/subdomain-enum/.
+# recorded as skipped; the port scan, web audit and dirbrute
+# phases ran against the demo server (pipeline 1.3.0).
+# report.html is the self-contained dark-themed report -
+# open it in a browser.
 
 $ python3 recon-pipeline/recon.py --hosts 127.0.0.1 \
     --url http://127.0.0.1:8080 --scheme http --output-dir reports
 
-[*] work directory: reports/http-127.0.0.1-8080-20261113-091439
-[*] phase 2/2: directory brute force on 1 host(s) ...
+-- stdout ----------------------------------------------------------------
+
+
+-- stderr ----------------------------------------------------------------
+[*] work directory: reports/http-127.0.0.1-8080-20261116-134542
+[*] phase 2/4: port scan on 1 host(s) ...
+[*]   scanning 127.0.0.1
+[*]   1 open port(s) on 127.0.0.1
+[*] phase 3/4: web audit on 1 URL(s) ...
+[*]   auditing http://127.0.0.1:8080
+[*]   http://127.0.0.1:8080 scored 3/100 (grade F)
+[*] phase 4/4: directory brute force on 1 host(s) ...
 [*]   scanning http://127.0.0.1:8080
 [*]   13 findings on http://127.0.0.1:8080
-[*] report written to reports/http-127.0.0.1-8080-20261113-091439/report.html (+ report.md, report.json) (1.2s total)
+[*] report written to reports/http-127.0.0.1-8080-20261116-134542/report.html (+ report.md, report.json) (2.6s total)

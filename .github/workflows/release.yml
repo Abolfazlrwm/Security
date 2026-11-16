@@ -6,6 +6,9 @@ on:
       - "dirbrute-v*"
       - "subdomain-enum-v*"
       - "hashcrack-v*"
+      - "port-scanner-v*"
+      - "takeover-check-v*"
+      - "web-audit-v*"
 
 permissions:
   contents: write
@@ -50,13 +53,35 @@ jobs:
             dirbrute/checksums.txt
           fail_on_unmatched_files: true
 
-  subdomain-enum:
-    name: Build subdomain-enum (${{ matrix.platform }})
-    if: startsWith(github.ref_name, 'subdomain-enum-v')
+  plan:
+    name: Pick the Python tool for this tag
+    runs-on: ubuntu-latest
+    outputs:
+      tool: ${{ steps.pick.outputs.tool }}
+      tools: ${{ steps.pick.outputs.tools }}
+    steps:
+      - id: pick
+        run: |
+          case "${GITHUB_REF_NAME}" in
+            subdomain-enum-v*) tool="subdomain-enum"; tools='["subdomain-enum"]';;
+            hashcrack-v*)      tool="hashcrack";      tools='["hashcrack"]';;
+            port-scanner-v*)   tool="port-scanner";   tools='["port-scanner"]';;
+            takeover-check-v*) tool="takeover-check"; tools='["takeover-check"]';;
+            web-audit-v*)      tool="web-audit";      tools='["web-audit"]';;
+            *)                 tool="";               tools='[]';;
+          esac
+          echo "tool=$tool" >> "$GITHUB_OUTPUT"
+          echo "tools=$tools" >> "$GITHUB_OUTPUT"
+
+  python-tool:
+    name: Build ${{ matrix.tool }} (${{ matrix.platform }})
+    if: needs.plan.outputs.tool != ''
+    needs: plan
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
+        tool: ${{ fromJSON(needs.plan.outputs.tools) }}
         include:
           - os: ubuntu-latest
             platform: linux-x86_64
@@ -77,25 +102,33 @@ jobs:
       - name: Build standalone binary
         shell: bash
         run: |
-          VERSION="${GITHUB_REF_NAME#subdomain-enum-v}"
+          VERSION="${GITHUB_REF_NAME#*-v}"
+          case "${{ matrix.tool }}" in
+            subdomain-enum) SCRIPT="subdomain-enum/subdomain_enum.py";;
+            hashcrack)      SCRIPT="hashcrack/hashcrack.py";;
+            port-scanner)   SCRIPT="port-scanner/port_scanner.py";;
+            takeover-check) SCRIPT="takeover-check/takeover_check.py";;
+            web-audit)      SCRIPT="web-audit/web_audit.py";;
+            *) echo "unknown tool: ${{ matrix.tool }}"; exit 1;;
+          esac
           pyinstaller --onefile --clean --noconfirm \
-            --name "subdomain-enum-${VERSION}-${{ matrix.platform }}" \
-            subdomain-enum/subdomain_enum.py
+            --name "${{ matrix.tool }}-${VERSION}-${{ matrix.platform }}" "$SCRIPT"
 
       - name: Smoke test the binary
         shell: bash
-        run: ./dist/subdomain-enum-* --help > /dev/null
+        run: ./dist/${{ matrix.tool }}-* --help > /dev/null
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
-          name: subdomain-enum-${{ matrix.platform }}
-          path: dist/subdomain-enum-*
+          name: ${{ matrix.tool }}-${{ matrix.platform }}
+          path: dist/${{ matrix.tool }}-*
           if-no-files-found: error
 
-  subdomain-enum-release:
-    name: Attach subdomain-enum binaries to the release
-    needs: subdomain-enum
+  python-tool-release:
+    name: Attach ${{ needs.plan.outputs.tool }} binaries to the release
+    if: needs.plan.outputs.tool != ''
+    needs: [plan, python-tool]
     runs-on: ubuntu-latest
     steps:
       - name: Collect built binaries
@@ -105,77 +138,12 @@ jobs:
           merge-multiple: true
 
       - name: Generate checksums
-        run: cd dist && sha256sum * > checksums.txt
+        run: cd dist && sha256sum ${{ needs.plan.outputs.tool }}-* > checksums.txt
 
       - name: Attach binaries to the release
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            dist/subdomain-enum-*
-            dist/checksums.txt
-          fail_on_unmatched_files: true
-
-  hashcrack:
-    name: Build hashcrack (${{ matrix.platform }})
-    if: startsWith(github.ref_name, 'hashcrack-v')
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - os: ubuntu-latest
-            platform: linux-x86_64
-          - os: macos-latest
-            platform: macos-arm64
-          - os: windows-latest
-            platform: windows-x86_64
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-
-      - name: Install PyInstaller
-        run: pip install "pyinstaller>=6,<7"
-
-      - name: Build standalone binary
-        shell: bash
-        run: |
-          VERSION="${GITHUB_REF_NAME#hashcrack-v}"
-          pyinstaller --onefile --clean --noconfirm \
-            --name "hashcrack-${VERSION}-${{ matrix.platform }}" \
-            hashcrack/hashcrack.py
-
-      - name: Smoke test the binary
-        shell: bash
-        run: ./dist/hashcrack-* --help > /dev/null
-
-      - name: Upload build artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: hashcrack-${{ matrix.platform }}
-          path: dist/hashcrack-*
-          if-no-files-found: error
-
-  hashcrack-release:
-    name: Attach hashcrack binaries to the release
-    needs: hashcrack
-    runs-on: ubuntu-latest
-    steps:
-      - name: Collect built binaries
-        uses: actions/download-artifact@v4
-        with:
-          path: dist
-          merge-multiple: true
-
-      - name: Generate checksums
-        run: cd dist && sha256sum hashcrack-* > checksums.txt
-
-      - name: Attach binaries to the release
-        uses: softprops/action-gh-release@v2
-        with:
-          files: |
-            dist/hashcrack-*
+            dist/${{ needs.plan.outputs.tool }}-*
             dist/checksums.txt
           fail_on_unmatched_files: true

@@ -7,6 +7,9 @@ shape captured in [examples/](../../examples/).
 | Tutorial | Tool | What you will learn |
 | --- | --- | --- |
 | [subdomain-enum](subdomain-enum.md) | Python | Enumerate live subdomains via crt.sh and DNS brute force, save JSON, tune threads and resolvers |
+| [port-scanner](port-scanner.md) | Python | Scan the curated top-100 port list or custom ranges, grab banners, export JSON |
+| [takeover-check](takeover-check.md) | Python | Fingerprint dangling CNAMEs against 17 hosting services and read the verdicts |
+| [web-audit](web-audit.md) | Python | Audit TLS certificates, the six classic security headers, cookies and the score/grade |
 | [dirbrute](dirbrute.md) | Go | Brute-force directories, filter wildcard noise, probe extensions, authenticate with cookies and headers |
 | [hashcrack](hashcrack.md) | Python | Crack MD5/SHA-1/SHA-256 digests, build rule chains, handle salted digests |
 | [recon-pipeline](recon-pipeline.md) | Python | Chain everything into one run and read the generated reports |
@@ -16,8 +19,11 @@ shape captured in [examples/](../../examples/).
 **Option 1 — prebuilt binaries (no runtime needed).** Download from the
 [releases](https://github.com/Abolfazlrwm/Security/releases) page:
 [subdomain-enum-v1.2.0](https://github.com/Abolfazlrwm/Security/releases/tag/subdomain-enum-v1.2.0),
-[dirbrute-v1.1.1](https://github.com/Abolfazlrwm/Security/releases/tag/dirbrute-v1.1.1) and
-[hashcrack-v1.1.1](https://github.com/Abolfazlrwm/Security/releases/tag/hashcrack-v1.1.1)
+[dirbrute-v1.1.1](https://github.com/Abolfazlrwm/Security/releases/tag/dirbrute-v1.1.1),
+[hashcrack-v1.2.0](https://github.com/Abolfazlrwm/Security/releases/tag/hashcrack-v1.2.0),
+[port-scanner-v1.0.0](https://github.com/Abolfazlrwm/Security/releases/tag/port-scanner-v1.0.0),
+[takeover-check-v1.0.0](https://github.com/Abolfazlrwm/Security/releases/tag/takeover-check-v1.0.0) and
+[web-audit-v1.0.0](https://github.com/Abolfazlrwm/Security/releases/tag/web-audit-v1.0.0)
 each carry binaries for every supported platform plus `checksums.txt`.
 Verify, chmod and run:
 
@@ -44,6 +50,7 @@ recon-pipeline always runs from source — it chains the other tools.
 These tools are for **authorized** testing only: systems you own, lab
 environments, CTFs or engagements with explicit written permission.
 Scanning systems you are not permitted to test is illegal in most
-jurisdictions. The safe demo target used throughout these tutorials is
-a local webserver (`127.0.0.1`), exactly like the captured runs in
+jurisdictions. The safe demo targets used throughout these tutorials are
+a local webserver (`127.0.0.1`), Nmap's `scanme.nmap.org` and the IANA
+reserved `example.com` — exactly like the captured runs in
 [examples/](../../examples/).

@@ -15,7 +15,7 @@ finished products land on
 | Workflow | File | Trigger | What it does |
 | --- | --- | --- | --- |
 | CI | [.github/workflows/ci.yml](../.github/workflows/ci.yml) | push to `main`, pull requests to `main`, manual dispatch | Byte-compiles and smoke-tests the Python tools on 3.11 and 3.12, lints and builds dirbrute on Linux, macOS and Windows, then runs the full integration harness |
-| Release binaries | [.github/workflows/release.yml](../.github/workflows/release.yml) | tags `dirbrute-v*`, `subdomain-enum-v*`, `hashcrack-v*` | Builds standalone binaries for every supported platform, smoke-tests each one, and attaches them plus sha256 checksums to the GitHub release |
+| Release binaries | [.github/workflows/release.yml](../.github/workflows/release.yml) | tags `dirbrute-v*`, `subdomain-enum-v*`, `hashcrack-v*`, `port-scanner-v*`, `takeover-check-v*`, `web-audit-v*` | Builds standalone binaries for every supported platform, smoke-tests each one, and attaches them plus sha256 checksums to the GitHub release |
 
 Both workflows stick to first-party actions — `actions/checkout`,
 `actions/setup-python`, `actions/setup-go`, `actions/upload-artifact`,
@@ -36,9 +36,14 @@ flowchart TD
     T["release tag"] --> REL
 
     subgraph REL["Release binaries workflow"]
+        PLAN["plan: pick the tool<br/>from the tag name"]
         B1["dirbrute: Go cross-compile<br/>5 platforms"]
-        B2["subdomain-enum: PyInstaller<br/>3 platforms"]
-        B3["hashcrack: PyInstaller<br/>3 platforms"]
+        B2["python-tool matrix: PyInstaller<br/>3 platforms x 5 tools"]
+        ATT["attach: checksums + release upload"]
+        PLAN --> B1
+        PLAN --> B2
+        B1 --> ATT
+        B2 --> ATT
     end
 
     CI --> OK["green checks on every commit"]
@@ -49,7 +54,7 @@ flowchart TD
 
 | Job | Matrix | Steps |
 | --- | --- | --- |
-| `python-tools` | Python 3.11 and 3.12 on ubuntu-latest | `python -m compileall` across the three Python tools, hashcrack smoke tests (plain lookup and a rule chain), `--help` smoke tests for subdomain-enum and recon-pipeline |
+| `python-tools` | Python 3.11 and 3.12 on ubuntu-latest | `python -m compileall` across all six Python tools, hashcrack smoke tests (plain lookup and a rule chain), a localhost port-scanner pass, `--help` smoke tests for every tool |
 | `go-tool` | ubuntu-latest, macos-latest, windows-latest | force LF line endings (Windows runners otherwise break `gofmt`), `gofmt -l` check, `go vet ./...`, `go build` |
 | `integration` | ubuntu-latest | `make build`, then `python3 tests/integration.py` — the harness starts a local demo webserver and exercises the whole toolkit end to end |
 
@@ -59,11 +64,12 @@ cancels the stale run instead of wasting runner minutes.
 
 ## Release pipeline in detail
 
-Tag names follow `<tool>-v<semver>` (for example `dirbrute-v1.1.1`). The
-release workflow routes each tag to the right job with
-`if: startsWith(github.ref_name, '<tool>-v')`, and runs with
-`permissions: contents: write` — the least privilege needed to publish
-release assets.
+Tag names follow `<tool>-v<semver>` (for example `dirbrute-v1.1.1`). A
+small `plan` job maps the tag name to the tool it releases, so adding a
+new tool to the release train is a one-line case statement. The
+`dirbrute` job keeps its own `startsWith` guard, and the Python jobs run
+with `permissions: contents: write` — the least privilege needed to
+publish release assets.
 
 ### dirbrute (Go cross-compilation)
 
@@ -83,21 +89,23 @@ A single ubuntu job builds five targets with the Go toolchain, using
 `fail_on_unmatched_files: true` — the release step fails rather than
 silently publishing an incomplete set.
 
-### subdomain-enum and hashcrack (PyInstaller)
+### The Python tools (PyInstaller matrix)
 
-Each Python tool runs a three-way matrix — `linux-x86_64` (ubuntu-latest),
-`macos-arm64` (macos-latest), `windows-x86_64` (windows-latest):
+All five packaged Python tools — subdomain-enum, hashcrack, port-scanner,
+takeover-check and web-audit — share one matrix job driven by the plan
+output: `linux-x86_64` (ubuntu-latest), `macos-arm64` (macos-latest),
+`windows-x86_64` (windows-latest):
 
 1. `pyinstaller --onefile --clean --noconfirm` builds a standalone binary
-   named `<tool>-<version>-<platform>`.
+   named `<tool>-<version>-<platform>` from the tool's script.
 2. The binary is smoke-tested with `--help` immediately, so a build that
    cannot even print its usage never gets published.
 3. Each platform uploads its binary as a build artifact.
 
-A second, dependent job (`<tool>-release`) then downloads and merges all
-platform artifacts, regenerates `checksums.txt` over the merged set, and
-attaches everything to the release. Splitting build from publish means a
-failure in one platform leg can only block the release job, never corrupt
+A second, dependent job (`python-tool-release`) then downloads and merges
+all platform artifacts, regenerates `checksums.txt` over the merged set,
+and attaches everything to the release. Splitting build from publish means
+a failure in one platform leg can only block the release job, never corrupt
 a half-uploaded release.
 
 `recon-pipeline-v*` tags are release-notes-only: recon-pipeline chains the

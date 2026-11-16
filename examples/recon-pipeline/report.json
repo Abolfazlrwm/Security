@@ -1,16 +1,92 @@
 {
   "tool": "recon-pipeline",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "target": "http://127.0.0.1:8080",
   "base_url": "http://127.0.0.1:8080",
-  "generated_at": "2026-11-13 09:14 UTC",
-  "tools": "subdomain-enum + dirbrute (pipeline 1.2.0)",
+  "generated_at": "2026-11-16 13:45 UTC",
+  "tools": "port-scanner + web-audit + dirbrute (pipeline 1.3.0)",
   "phases": {
     "subdomains": {
       "ran": false,
       "reason": "host list provided via --hosts",
       "count": 0,
       "subdomains": []
+    },
+    "ports": {
+      "ran": true,
+      "hosts": {
+        "127.0.0.1": {
+          "ip": "127.0.0.1",
+          "open_count": 1,
+          "ports": [
+            {
+              "banner": "",
+              "port": 8080,
+              "service": "http-proxy",
+              "state": "open"
+            }
+          ]
+        }
+      }
+    },
+    "audit": {
+      "ran": true,
+      "urls": {
+        "http://127.0.0.1:8080": {
+          "score": 3,
+          "grade": "F",
+          "tls": {
+            "days_left": null,
+            "detail": "plain HTTP",
+            "issuer": null,
+            "state": "none",
+            "subject": null
+          },
+          "findings": [
+            {
+              "check": "http",
+              "detail": "HTTP 200",
+              "status": "ok"
+            },
+            {
+              "check": "strict-transport-security",
+              "detail": "enable HSTS once HTTPS is stable (prevents protocol downgrade)",
+              "status": "missing"
+            },
+            {
+              "check": "content-security-policy",
+              "detail": "start with a report-only CSP, then restrict script sources",
+              "status": "missing"
+            },
+            {
+              "check": "x-content-type-options",
+              "detail": "send nosniff to stop MIME-type sniffing",
+              "status": "missing"
+            },
+            {
+              "check": "x-frame-options",
+              "detail": "deny framing (DENY / SAMEORIGIN, or CSP frame-ancestors)",
+              "status": "missing"
+            },
+            {
+              "check": "referrer-policy",
+              "detail": "limit referrer leakage, e.g. strict-origin-when-cross-origin",
+              "status": "missing"
+            },
+            {
+              "check": "permissions-policy",
+              "detail": "restrict powerful browser features (camera, geolocation, ...)",
+              "status": "missing"
+            },
+            {
+              "check": "server disclosure",
+              "detail": "server header reveals a version: SimpleHTTP/0.6 Python/3.12.16",
+              "status": "warn"
+            }
+          ],
+          "cookie_issues": []
+        }
+      }
     },
     "dirbrute": {
       "ran": true,
@@ -19,29 +95,9 @@
           "count": 13,
           "findings": [
             {
-              "path": ".git/config",
-              "status": 200,
-              "size": 104
-            },
-            {
               "path": ".env",
               "status": 200,
               "size": 124
-            },
-            {
-              "path": "sitemap.xml",
-              "status": 200,
-              "size": 199
-            },
-            {
-              "path": "index.html",
-              "status": 200,
-              "size": 96
-            },
-            {
-              "path": "robots.txt",
-              "status": 200,
-              "size": 67
             },
             {
               "path": "admin",
@@ -59,14 +115,14 @@
               "size": 0
             },
             {
-              "path": "server-status",
+              "path": "backup.zip",
               "status": 200,
-              "size": 57
+              "size": 152
             },
             {
-              "path": "uploads",
-              "status": 301,
-              "size": 0
+              "path": "index.html",
+              "status": 200,
+              "size": 96
             },
             {
               "path": "phpinfo.php",
@@ -74,9 +130,29 @@
               "size": 30
             },
             {
-              "path": "backup.zip",
+              "path": "robots.txt",
               "status": 200,
-              "size": 152
+              "size": 67
+            },
+            {
+              "path": "server-status",
+              "status": 200,
+              "size": 57
+            },
+            {
+              "path": "sitemap.xml",
+              "status": 200,
+              "size": 199
+            },
+            {
+              "path": "uploads",
+              "status": 301,
+              "size": 0
+            },
+            {
+              "path": ".git/config",
+              "status": 200,
+              "size": 104
             },
             {
               "path": ".git/HEAD",
@@ -92,6 +168,9 @@
   "summary": {
     "subdomains": 0,
     "hosts_scanned": 1,
-    "findings": 13
+    "findings": 13,
+    "open_ports": 1,
+    "audit_score": 3,
+    "audit_grade": "F"
   }
 }
