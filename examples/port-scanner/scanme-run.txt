@@ -1,0 +1,20 @@
+# port-scanner - captured run against scanme.nmap.org
+# Nmap runs scanme.nmap.org as a public target that is explicitly
+# allowed to be scanned - perfect for a demo capture. A curated
+# top-100 list is scanned with banner grabbing enabled.
+
+$ python3 port-scanner/port_scanner.py scanme.nmap.org --top 100
+
+-- stdout ----------------------------------------------------------------
+target scanme.nmap.org (45.33.32.156) - 100 ports scanned
+
+PORT      STATE   SERVICE         BANNER
+22/tcp    open    ssh             SSH-2.0-OpenSSH_6.6.1p1 Ubuntu-2ubuntu2.13
+80/tcp    open    http            (no banner)
+
+2 open of 100 scanned
+
+-- stderr ----------------------------------------------------------------
+[*] target: scanme.nmap.org (45.33.32.156) - authorized use only, scan what you own
+[*] scanning top 100 ports with 300 workers, 1.0s timeout
+[*] done: 2 open of 100 scanned in 1.7s

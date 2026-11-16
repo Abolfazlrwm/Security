@@ -1,0 +1,17 @@
+# takeover-check - captured run
+# Three verdict shapes: an ok host, a claimed CNAME (pages.github.com
+# really points at the GitHub Pages farm) and an unresolvable name.
+# A vulnerable verdict is only produced when a CNAME fingerprint and
+# a 404 signature line up - none of these hosts are vulnerable.
+
+$ python3 takeover-check/takeover_check.py -f examples/takeover-check/hosts.txt
+
+-- stdout ----------------------------------------------------------------
+[=] ok          example.com no takeover fingerprint
+[~] claimed     pages.github.com -> GitHub Pages (CNAME github.github.io) content served, no takeover signature
+[?] unresolved  missing-xyz-12345.example.com DNS lookup failed (check for a dangling CNAME at the DNS provider)
+
+-- stderr ----------------------------------------------------------------
+[*] checking 3 host(s) with 10 threads - authorized use only
+[*] done: 0 vulnerable, 1 claimed/no-http, 1 unresolved, 0.0s
+[!] fingerprints are heuristics - verify a hit manually before reporting anything

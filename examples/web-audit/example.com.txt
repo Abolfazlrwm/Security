@@ -1,0 +1,21 @@
+# web-audit - captured run against example.com
+# The IANA reserved documentation domain: a real TLS certificate
+# and a real header set, but a textbook example of a server that
+# ships none of the classic security headers - hence a low score.
+
+$ python3 web-audit/web_audit.py example.com
+
+-- stdout ----------------------------------------------------------------
+[+] TLS certificate valid (39 day(s) left, issued by SSL Corporation)
+[!] HTTP->HTTPS redirect: http:// does not redirect to https:// (lands on http://example.com/)
+[+] HTTP 200 response (12 header name(s) received)
+[!] header strict-transport-security missing - enable HSTS once HTTPS is stable (prevents protocol downgrade)
+[!] header content-security-policy missing - start with a report-only CSP, then restrict script sources
+[!] header x-content-type-options missing - send nosniff to stop MIME-type sniffing
+[!] header x-frame-options missing - deny framing (DENY / SAMEORIGIN, or CSP frame-ancestors)
+[!] header referrer-policy missing - limit referrer leakage, e.g. strict-origin-when-cross-origin
+[!] header permissions-policy missing - restrict powerful browser features (camera, geolocation, ...)
+[*] Web audit score: 22/100 (grade F)
+
+-- stderr ----------------------------------------------------------------
+[*] target: https://example.com - authorized use only

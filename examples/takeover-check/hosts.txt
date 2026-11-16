@@ -1,0 +1,6 @@
+# hosts checked in the captured run
+# one plain host, one real CNAME to a claimed service, and one
+# name that does not resolve (the dangling-record scenario)
+example.com
+pages.github.com
+missing-xyz-12345.example.com
