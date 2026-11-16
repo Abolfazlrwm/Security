@@ -71,6 +71,7 @@ class TargetLoadingTests(unittest.TestCase):
             hashlib.md5(b"x").hexdigest(): "md5",
             hashlib.sha1(b"x").hexdigest(): "sha1",
             hashlib.sha256(b"x").hexdigest(): "sha256",
+            hashlib.sha512(b"x").hexdigest(): "sha512",
         }
         for digest, algo in cases.items():
             with self.subTest(algo=algo):

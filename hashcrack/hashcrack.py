@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Crack MD5, SHA-1 and SHA-256 digests with wordlists and rule mutations.
+"""Crack MD5, SHA-1, SHA-256 and SHA-512 digests with wordlists and rule mutations.
 
 The tool streams a wordlist, applies an ordered chain of mutation rules to
 every word (mirroring the classic "rules" workflow) and compares each
@@ -17,10 +17,10 @@ import time
 from pathlib import Path
 
 TOOL_NAME = "hashcrack"
-TOOL_VERSION = "1.1.1"
+TOOL_VERSION = "1.2.0"
 
-ALGOS = ("md5", "sha1", "sha256")
-ALGO_BY_LENGTH = {32: "md5", 40: "sha1", 64: "sha256"}
+ALGOS = ("md5", "sha1", "sha256", "sha512")
+ALGO_BY_LENGTH = {32: "md5", 40: "sha1", 64: "sha256", 128: "sha512"}
 LENGTH_BY_ALGO = {v: k for k, v in ALGO_BY_LENGTH.items()}
 
 LEET = str.maketrans({"a": "4", "e": "3", "i": "1", "o": "0", "s": "5", "t": "7"})
@@ -197,7 +197,7 @@ def crack(
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         prog=TOOL_NAME,
-        description="Crack MD5/SHA-1/SHA-256 hashes with wordlists and rules.",
+        description="Crack MD5/SHA-1/SHA-256/SHA-512 hashes with wordlists and rules.",
         epilog="available rules: " + ", ".join(RULES),
     )
     parser.add_argument("--hash", action="append", metavar="DIGEST", help="target digest, repeatable")

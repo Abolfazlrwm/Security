@@ -23,7 +23,7 @@ consolidated pipeline:
 | --- | --- | --- |
 | [subdomain-enum](subdomain-enum/) | Python 3 | Subdomain discovery via crt.sh and threaded DNS brute force |
 | [dirbrute](dirbrute/) | Go | Threaded directory and file brute-forcer with wildcard filtering |
-| [hashcrack](hashcrack/) | Python 3 | MD5 / SHA-1 / SHA-256 cracking with wordlists and rule chains |
+| [hashcrack](hashcrack/) | Python 3 | MD5 / SHA-1 / SHA-256 / SHA-512 cracking with wordlists and rule chains |
 | [recon-pipeline](recon-pipeline/) | Python 3 | Chains the tools above and writes markdown, JSON and HTML reports |
 
 Step-by-step tutorials with every flag explained live in

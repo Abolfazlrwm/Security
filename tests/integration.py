@@ -128,12 +128,14 @@ def test_hashcrack() -> None:
     plain_md5 = hashlib.md5(b"password123").hexdigest()
     sha1 = hashlib.sha1(b"qwerty").hexdigest()
     sha256 = hashlib.sha256(b"abc123").hexdigest()
+    sha512 = hashlib.sha512(b"password123").hexdigest()
     rules_md5 = hashlib.md5(b"Password2024").hexdigest()
     salt_md5 = hashlib.md5(b"salt123admin").hexdigest()
 
     hashes_file = REPO_ROOT / "hashcrack" / "test-targets.tmp"
     hashes_file.write_text(
-        f"{plain_md5}\n{sha1}\n{sha256}\n# needs the rule engine\n{rules_md5}\n",
+        f"{plain_md5}\n{sha1}\n{sha256}\n{sha512}\n"
+        f"# needs the rule engine\n{rules_md5}\n",
         encoding="utf-8",
     )
     proc = run([sys.executable, str(script), "--hashes", str(hashes_file)])

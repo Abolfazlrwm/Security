@@ -1,15 +1,16 @@
 # hashcrack
 
-A small, honest hash cracker for MD5, SHA-1 and SHA-256. It streams a
-wordlist, applies an ordered chain of mutation rules (the classic "rules"
-workflow) and compares every candidate against your targets. Algorithms are
-auto-detected from digest length unless `--type` pins one.
+A small, honest hash cracker for MD5, SHA-1, SHA-256 and SHA-512. It
+streams a wordlist, applies an ordered chain of mutation rules (the
+classic "rules" workflow) and compares every candidate against your
+targets. Algorithms are auto-detected from digest length unless `--type`
+pins one.
 
 Uses only the Python standard library.
 
 ## Features
 
-- **Three algorithms** — md5, sha1, sha256; mixed targets in one run are fine.
+- **Four algorithms** — md5, sha1, sha256, sha512; mixed targets in one run are fine.
 - **Rule chains** — rules apply in the given order, so `capitalize,append2`
   turns `admin` into `Admin00` ... `Admin99`.
 - **Salting** — `--salt` with `--salt-position prefix|suffix` for salted dumps.
@@ -45,7 +46,7 @@ $ python3 hashcrack.py --hashes targets.txt --rules append2 -o found.txt
 | `upper` | `PASS` |
 | `capitalize` | `Pass` |
 | `reverse` | `ssap` |
-| `leet` | `p4ss` |
+| `leet` | `p455` |
 | `append1` | `pass0` ... `pass9` |
 | `append2` | `pass00` ... `pass99` |
 | `append4` | `pass0000` ... `pass9999` |
@@ -58,7 +59,7 @@ $ python3 hashcrack.py --hashes targets.txt --rules append2 -o found.txt
 | `--hashes` | File with one digest per line | — |
 | `-w, --wordlist` | Wordlist file | bundled `wordlists/common-passwords.txt`, then the built-in list |
 | `--rules` | Comma separated rule chain | none |
-| `--type` | Force `md5`, `sha1` or `sha256` | auto by length |
+| `--type` | Force `md5`, `sha1`, `sha256` or `sha512` | auto by length |
 | `--salt` | Salt for every candidate | none |
 | `--salt-position` | `prefix` or `suffix` | suffix |
 | `-o, --found-file` | Append `digest:plain` pairs to a file | — |

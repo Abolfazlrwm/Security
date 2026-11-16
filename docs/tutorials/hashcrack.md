@@ -1,9 +1,9 @@
 # Tutorial — hashcrack
 
-`hashcrack` cracks MD5, SHA-1 and SHA-256 digests with a wordlist, an
-optional rule chain and optional salting. It auto-detects the algorithm
-from the digest length, needs only a bare Python 3.8+ (standard library
-only), and works from a single hash or a whole file.
+`hashcrack` cracks MD5, SHA-1, SHA-256 and SHA-512 digests with a
+wordlist, an optional rule chain and optional salting. It auto-detects
+the algorithm from the digest length, needs only a bare Python 3.8+
+(standard library only), and works from a single hash or a whole file.
 
 ## Step 1 — a single hash
 
@@ -13,7 +13,7 @@ $ python3 hashcrack/hashcrack.py --hash 5f4dcc3b5aa765d61d8327deb882cf99
 ```
 
 The algorithm is auto-detected (32 hex chars → MD5, 40 → SHA-1, 64 →
-SHA-256); `--type sha256` forces one if you ever need to.
+SHA-256, 128 → SHA-512); `--type sha512` forces one if you ever need to.
 
 ## Step 2 — a file of targets
 
@@ -97,7 +97,7 @@ digest survived the whole candidate space — handy in scripts:
 | `--hashes FILE` | file with one digest per line |
 | `-w, --wordlist` | wordlist file (default: bundled, then built-in) |
 | `--rules` | comma separated rule chain, applied in order |
-| `--type` | force `md5` / `sha1` / `sha256` instead of auto-detection |
+| `--type` | force `md5` / `sha1` / `sha256` / `sha512` instead of auto-detection |
 | `--salt` | salt for every candidate |
 | `--salt-position` | `prefix` or `suffix` (default `suffix`) |
 | `-o, --found-file` | append `digest:plain` pairs to this file |
