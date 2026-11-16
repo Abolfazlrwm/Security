@@ -1,0 +1,46 @@
+name: Feature request
+description: Suggest an improvement or a new capability
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Describe the use case first: the smallest tool that solves a real
+        recon task beats a pile of flags. Remember the ground rules from
+        [CONTRIBUTING.md](../../CONTRIBUTING.md) — standard library only,
+        one self-contained file per tool, authorized use only.
+  - type: dropdown
+    id: tool
+    attributes:
+      label: Which tool does this affect?
+      options:
+        - subdomain-enum
+        - dirbrute
+        - hashcrack
+        - recon-pipeline
+        - repository / CI / docs
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem or use case
+      description: What are you trying to do, and what stands in the way today?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: The command you wish existed, or the behaviour you expect.
+      placeholder: e.g. dirbrute -u https://target/ --rate 100
+    validations:
+      required: true
+  - type: checkboxes
+    id: constraints
+    attributes:
+      label: Constraints check
+      options:
+        - label: This can be built with the standard library only (no new dependencies)
+        - label: This keeps the tool a single self-contained file
+        - label: This is for authorized testing scenarios

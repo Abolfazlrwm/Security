@@ -1,0 +1,64 @@
+name: Bug report
+description: Report something that is broken or behaves unexpectedly
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug. Fill in the details
+        below — the exact command and full output are the two things that
+        make bugs fixable. **Redact anything that identifies your targets.**
+
+        For security issues, do **not** use this form: see
+        [SECURITY.md](../../SECURITY.md) for private reporting.
+  - type: dropdown
+    id: tool
+    attributes:
+      label: Which tool?
+      options:
+        - subdomain-enum
+        - dirbrute
+        - hashcrack
+        - recon-pipeline
+        - other / repository itself
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Tool version
+      description: Output of `--help` header, the release tag you downloaded, or the commit hash.
+      placeholder: e.g. hashcrack 1.2.0 / dirbrute-v1.1.1 / commit 7d482e0
+    validations:
+      required: true
+  - type: dropdown
+    id: os
+    attributes:
+      label: Operating system
+      options:
+        - Linux
+        - macOS
+        - Windows
+        - other
+    validations:
+      required: true
+  - type: textarea
+    id: command
+    attributes:
+      label: Exact command you ran
+      placeholder: ./dirbrute/dirbrute -u https://target/ -t 30
+    validations:
+      required: true
+  - type: textarea
+    id: output
+    attributes:
+      label: Full output (stdout and stderr)
+      description: Paste everything; redact target-identifying hostnames.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect to happen?
+    validations:
+      required: true
