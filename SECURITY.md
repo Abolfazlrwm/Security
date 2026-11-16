@@ -68,5 +68,5 @@ Only the latest tagged release of each tool receives security fixes:
 | --- | --- | --- |
 | subdomain-enum | v1.2.0 | linux, macOS (arm64), windows |
 | dirbrute | v1.1.1 | linux (amd64, arm64), macOS (amd64, arm64), windows |
-| hashcrack | v1.1.1 | linux, macOS (arm64), windows |
+| hashcrack | v1.2.0 | linux, macOS (arm64), windows |
 | recon-pipeline | v1.2.0 | runs from source (chains the other tools) |

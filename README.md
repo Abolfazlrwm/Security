@@ -38,7 +38,7 @@ sha256 checksums, to the matching GitHub release:
 | --- | --- | --- |
 | dirbrute | linux (amd64, arm64), macOS (amd64, arm64), windows | [dirbrute-v1.1.1](https://github.com/Abolfazlrwm/Security/releases/tag/dirbrute-v1.1.1) |
 | subdomain-enum | linux, macOS (arm64), windows | [subdomain-enum-v1.2.0](https://github.com/Abolfazlrwm/Security/releases/tag/subdomain-enum-v1.2.0) |
-| hashcrack | linux, macOS (arm64), windows | [hashcrack-v1.1.1](https://github.com/Abolfazlrwm/Security/releases/tag/hashcrack-v1.1.1) |
+| hashcrack | linux, macOS (arm64), windows | [hashcrack-v1.2.0](https://github.com/Abolfazlrwm/Security/releases/tag/hashcrack-v1.2.0) |
 
 dirbrute is cross-compiled with the Go toolchain; the Python tools are
 packaged with PyInstaller. Both paths smoke-test every artifact inside the

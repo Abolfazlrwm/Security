@@ -149,6 +149,7 @@ attached automatically.
 | [hashcrack-v1.0.0](https://github.com/Abolfazlrwm/Security/releases/tag/hashcrack-v1.0.0) | 2026-11-12 | First release: MD5/SHA-1/SHA-256 cracker with rule chains and salting | — predates the binary pipeline |
 | [hashcrack-v1.1.0](https://github.com/Abolfazlrwm/Security/releases/tag/hashcrack-v1.1.0) | 2026-11-12 | Three captured `examples/hashcrack/` sessions, including a salted digest | — predates the binary pipeline |
 | [hashcrack-v1.1.1](https://github.com/Abolfazlrwm/Security/releases/tag/hashcrack-v1.1.1) | 2026-11-13 | First automated binary release | 3 platforms + checksums |
+| [hashcrack-v1.2.0](https://github.com/Abolfazlrwm/Security/releases/tag/hashcrack-v1.2.0) | 2026-11-13 | SHA-512 support, `leet` README fix, expanded toolkit wordlists | 3 platforms + checksums |
 | [recon-pipeline-v1.0.0](https://github.com/Abolfazlrwm/Security/releases/tag/recon-pipeline-v1.0.0) | 2026-11-12 | First release: chains the tools, writes `report.md` + `report.json` + raw logs | runs from source |
 | [recon-pipeline-v1.1.0](https://github.com/Abolfazlrwm/Security/releases/tag/recon-pipeline-v1.1.0) | 2026-11-12 | Captured `examples/recon-pipeline/` end-to-end run | runs from source |
 | [recon-pipeline-v1.2.0](https://github.com/Abolfazlrwm/Security/releases/tag/recon-pipeline-v1.2.0) | 2026-11-13 | Self-contained dark-themed `report.html` added to every run | runs from source |
