@@ -8,19 +8,22 @@ Runs the network-free code paths end to end:
 * dirbrute       - a full scan against an in-process demo webserver
 * port-scanner   - a live scan of the demo webserver port (open + closed)
 * web-audit      - a header/score audit of the demo webserver over http
+* jwt-analyzer   - decode, crack and verify locally generated tokens
 * recon-pipeline - a --hosts run that chains the built binary and also
                    verifies the self-contained HTML report
 
-subdomain-enum and takeover-check are exercised only through their --help
-pages because a real run needs live DNS and third-party HTTP access,
-which CI must not depend on.
+subdomain-enum, takeover-check and cve-lookup are exercised only through
+their --help pages because a real run needs live DNS, third-party HTTP
+access or the NVD API, which CI must not depend on.
 
 Exit code 0 means every assertion passed. Standard library only.
 """
 
 from __future__ import annotations
 
+import base64
 import hashlib
+import hmac
 import http.server
 import json
 import shutil
@@ -222,6 +225,50 @@ def test_pipeline(port: int, workdir: Path) -> None:
             check("report.html exists", False)
 
 
+def test_jwt_analyzer() -> None:
+    print("\n== jwt-analyzer ==", flush=True)
+    script = REPO_ROOT / "jwt-analyzer" / "jwt_analyzer.py"
+
+    def make_token(payload: dict, secret: str, alg: str = "HS256") -> str:
+        def b64(data: bytes) -> str:
+            return base64.urlsafe_b64encode(data).rstrip(b"=").decode()
+        header_b = b64(json.dumps({"alg": alg, "typ": "JWT"}).encode())
+        payload_b = b64(json.dumps(payload).encode())
+        signing = f"{header_b}.{payload_b}".encode()
+        if alg == "none":
+            return f"{header_b}.{payload_b}."
+        digest = hmac.new(secret.encode(), signing,
+                          getattr(hashlib, alg.replace("HS", "sha").lower())).digest()
+        return f"{header_b}.{payload_b}.{b64(digest)}"
+
+    weak = make_token({"sub": "admin", "role": "admin",
+                       "iat": 1735689600, "exp": 1924934400}, "secret123")
+    proc = run([sys.executable, str(script), weak])
+    check("weak HMAC secret is cracked", proc.returncode == 1
+          and "CRACKED" in proc.stdout and "'secret123'" in proc.stdout,
+          proc.stdout[-160:])
+
+    none_token = make_token({"sub": "attacker", "role": "admin"}, "unused",
+                            alg="none")
+    proc = run([sys.executable, str(script), none_token])
+    check("alg none token is flagged critical", proc.returncode == 1
+          and "signature bypass" in proc.stdout, proc.stdout[-160:])
+
+    solid = make_token({"sub": "service", "exp": 1_900_000_000}, "S7rong#Secret!")
+    proc = run([sys.executable, str(script), solid, "--secret", "S7rong#Secret!",
+                "--no-crack"])
+    check("valid secret verifies and exits zero", proc.returncode == 0
+          and "matches the provided secret: yes" in proc.stdout, proc.stdout[-160:])
+
+    proc = run([sys.executable, str(script), solid, "--secret", "wrong-secret",
+                "--no-crack"])
+    check("wrong secret is reported", "matches the provided secret: NO"
+          in proc.stdout, proc.stdout[-160:])
+
+    proc = run([sys.executable, str(script), "not-a-token"])
+    check("malformed token exits with usage error", proc.returncode == 2)
+
+
 def test_help_pages() -> None:
     print("\n== CLI help pages ==", flush=True)
     proc = run([sys.executable, str(REPO_ROOT / "subdomain-enum" / "subdomain_enum.py"),
@@ -239,6 +286,14 @@ def test_help_pages() -> None:
     proc = run([sys.executable, str(REPO_ROOT / "web-audit" / "web_audit.py"), "--help"])
     check("web-audit --help exits zero",
           proc.returncode == 0 and "--format" in proc.stdout)
+    proc = run([sys.executable, str(REPO_ROOT / "jwt-analyzer" / "jwt_analyzer.py"),
+                "--help"])
+    check("jwt-analyzer --help exits zero",
+          proc.returncode == 0 and "--no-crack" in proc.stdout)
+    proc = run([sys.executable, str(REPO_ROOT / "cve-lookup" / "cve_lookup.py"),
+                "--help"])
+    check("cve-lookup --help exits zero",
+          proc.returncode == 0 and "--from-scan" in proc.stdout)
     proc = run([sys.executable, str(REPO_ROOT / "recon-pipeline" / "recon.py"), "--help"])
     check("recon-pipeline --help exits zero",
           proc.returncode == 0 and "--skip-ports" in proc.stdout)
@@ -297,6 +352,7 @@ def main() -> int:
     try:
         test_help_pages()
         test_hashcrack()
+        test_jwt_analyzer()
         test_dirbrute(port)
         test_port_scanner(port)
         test_web_audit(port)

@@ -1,0 +1,54 @@
+$ python3 jwt-analyzer/jwt_analyzer.py "$(cat examples/jwt-analyzer/weak-hs256.txt)"
+[*] dictionary attack with 70 candidate secrets (built-in list)
+[*] analyzed HS256 token, 4 claims, 2 findings
+(stderr shown separately; stdout below)
+
+JWT analysis - alg HS256
+
+Header
+  alg         "HS256"
+  typ         "JWT"
+
+Claims
+  sub         "admin"
+  role        "admin"
+  iat         2025-01-01T00:00:00Z  (numeric 1735689600)
+  exp         2030-12-31T08:00:00Z  (numeric 1924934400)
+
+Signature
+  32 bytes of signature
+  dictionary attack: CRACKED -> 'secret123'
+
+Findings
+  [CRITICAL] weak HMAC secret cracked: 'secret123'
+             matched built-in list after 70 candidate(s)
+  [LOW     ] token lifetime is 2190 days
+             long-lived tokens widen the window for replay attacks
+
+Summary: 1 critical, 0 high, 0 medium, 1 low, 0 info
+exit code: 1 (critical findings)
+
+$ python3 jwt-analyzer/jwt_analyzer.py "$(cat examples/jwt-analyzer/alg-none.txt)"
+(stderr shown separately; stdout below)
+
+JWT analysis - alg none
+
+Header
+  alg         "none"
+  typ         "JWT"
+
+Claims
+  sub         "attacker"
+  role        "admin"
+
+Signature
+  0 bytes of signature
+
+Findings
+  [CRITICAL] alg "none" - signature bypass
+             servers that skip verification accept this token from anyone
+  [HIGH    ] token never expires
+             no exp claim in the payload
+
+Summary: 1 critical, 1 high, 0 medium, 0 low, 0 info
+exit code: 1 (critical findings)

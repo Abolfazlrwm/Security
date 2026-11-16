@@ -62,7 +62,7 @@ fine. One logical change per commit keeps release bisecting possible.
    | Gate | Command |
    | --- | --- |
    | Python unit tests | `make test` |
-   | Python syntax (all tools) | `python -m compileall subdomain-enum hashcrack recon-pipeline port-scanner takeover-check web-audit` |
+   | Python syntax (all tools) | `python -m compileall subdomain-enum hashcrack recon-pipeline port-scanner takeover-check web-audit jwt-analyzer cve-lookup` |
    | Go formatting (hard tabs, no CRLF) | `gofmt -l dirbrute` must print nothing |
    | Go unit tests | `make gotest` |
    | Go vet and build | `cd dirbrute && go vet ./... && go build -o dirbrute .` |

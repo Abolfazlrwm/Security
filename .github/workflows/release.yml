@@ -9,6 +9,8 @@ on:
       - "port-scanner-v*"
       - "takeover-check-v*"
       - "web-audit-v*"
+      - "jwt-analyzer-v*"
+      - "cve-lookup-v*"
 
 permissions:
   contents: write
@@ -73,6 +75,8 @@ jobs:
             port-scanner-v*)   tool="port-scanner";;
             takeover-check-v*) tool="takeover-check";;
             web-audit-v*)      tool="web-audit";;
+            jwt-analyzer-v*)   tool="jwt-analyzer";;
+            cve-lookup-v*)     tool="cve-lookup";;
             *)                 tool="";;
           esac
           if [ -n "$tool" ]; then
@@ -114,6 +118,8 @@ jobs:
             port-scanner)   SCRIPT="port-scanner/port_scanner.py";;
             takeover-check) SCRIPT="takeover-check/takeover_check.py";;
             web-audit)      SCRIPT="web-audit/web_audit.py";;
+            jwt-analyzer)   SCRIPT="jwt-analyzer/jwt_analyzer.py";;
+            cve-lookup)     SCRIPT="cve-lookup/cve_lookup.py";;
             *) echo "unknown tool: ${{ matrix.tool }}"; exit 1;;
           esac
           pyinstaller --onefile --clean --noconfirm \

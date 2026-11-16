@@ -27,7 +27,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
 
       - name: Byte-compile every tool
-        run: python -m compileall subdomain-enum hashcrack recon-pipeline port-scanner takeover-check web-audit
+        run: python -m compileall subdomain-enum hashcrack recon-pipeline port-scanner takeover-check web-audit jwt-analyzer cve-lookup
 
       - name: hashcrack smoke test (plain lookup)
         run: |
@@ -43,7 +43,16 @@ jobs:
           python3 port-scanner/port_scanner.py --help > /dev/null
           python3 takeover-check/takeover_check.py --help > /dev/null
           python3 web-audit/web_audit.py --help > /dev/null
+          python3 jwt-analyzer/jwt_analyzer.py --help > /dev/null
+          python3 cve-lookup/cve_lookup.py --help > /dev/null
           python3 recon-pipeline/recon.py --help > /dev/null
+
+      - name: jwt-analyzer smoke test (offline token audit)
+        run: |
+          token=$(cat examples/jwt-analyzer/weak-hs256.txt)
+          python3 jwt-analyzer/jwt_analyzer.py "$token" --no-crack --now 2026-11-16T00:00:00Z > /dev/null
+          python3 jwt-analyzer/jwt_analyzer.py "$token" | grep -q 'CRACKED'
+          python3 jwt-analyzer/jwt_analyzer.py "$(cat examples/jwt-analyzer/alg-none.txt)" | grep -q 'CRITICAL'
 
       - name: port-scanner smoke test (localhost)
         run: |

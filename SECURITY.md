@@ -2,7 +2,8 @@
 
 ## Scope
 
-This repository ships four security-testing tools (subdomain-enum,
+This repository ships nine security-testing tools (subdomain-enum,
+port-scanner, takeover-check, web-audit, jwt-analyzer, cve-lookup,
 dirbrute, hashcrack and recon-pipeline). Everything here is written for
 **authorized** work only — your own systems, lab environments, CTFs or
 engagements you have explicit written permission to run. Using the tools
@@ -42,7 +43,7 @@ pipeline works.
 ## In scope
 
 - Command or code injection, path traversal, unsafe temporary-file or
-  report handling in any of the four tools
+  report handling in any of the tools
 - A tool reading or writing outside its working directory without being
   explicitly asked to
 - Crashes, hangs or memory exhaustion triggered by input the tool is
@@ -69,4 +70,9 @@ Only the latest tagged release of each tool receives security fixes:
 | subdomain-enum | v1.2.0 | linux, macOS (arm64), windows |
 | dirbrute | v1.1.1 | linux (amd64, arm64), macOS (amd64, arm64), windows |
 | hashcrack | v1.2.0 | linux, macOS (arm64), windows |
-| recon-pipeline | v1.2.0 | runs from source (chains the other tools) |
+| port-scanner | v1.0.0 | linux, macOS (arm64), windows |
+| takeover-check | v1.0.0 | linux, macOS (arm64), windows |
+| web-audit | v1.0.0 | linux, macOS (arm64), windows |
+| jwt-analyzer | v1.0.0 | linux, macOS (arm64), windows |
+| cve-lookup | v1.0.0 | linux, macOS (arm64), windows |
+| recon-pipeline | v1.3.0 | runs from source (chains the other tools) |

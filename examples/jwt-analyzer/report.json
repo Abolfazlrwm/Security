@@ -1,0 +1,44 @@
+{
+  "algorithm": "HS256",
+  "claims": {
+    "exp": 1924934400,
+    "iat": 1735689600,
+    "role": "admin",
+    "sub": "admin"
+  },
+  "findings": [
+    {
+      "detail": "matched built-in list after 70 candidate(s)",
+      "severity": "critical",
+      "title": "weak HMAC secret cracked: 'secret123'"
+    },
+    {
+      "detail": "long-lived tokens widen the window for replay attacks",
+      "severity": "low",
+      "title": "token lifetime is 2190 days"
+    }
+  ],
+  "generated_at": "2026-11-16T15:04:26Z",
+  "header": {
+    "alg": "HS256",
+    "typ": "JWT"
+  },
+  "secret_check": {
+    "cracked": true,
+    "label": "built-in list",
+    "secret": "secret123",
+    "tried": 70
+  },
+  "signature_bytes": 32,
+  "signature_verified": null,
+  "summary": {
+    "critical": 1,
+    "high": 0,
+    "info": 0,
+    "low": 1,
+    "medium": 0
+  },
+  "tool": "jwt-analyzer",
+  "typ": "JWT",
+  "version": "1.0.0"
+}

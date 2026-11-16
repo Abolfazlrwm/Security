@@ -10,6 +10,8 @@ shape captured in [examples/](../../examples/).
 | [port-scanner](port-scanner.md) | Python | Scan the curated top-100 port list or custom ranges, grab banners, export JSON |
 | [takeover-check](takeover-check.md) | Python | Fingerprint dangling CNAMEs against 17 hosting services and read the verdicts |
 | [web-audit](web-audit.md) | Python | Audit TLS certificates, the six classic security headers, cookies and the score/grade |
+| [jwt-analyzer](jwt-analyzer.md) | Python | Decode and audit JWTs offline: crack weak HMAC secrets, catch `alg: none` and read the severity-ranked findings |
+| [cve-lookup](cve-lookup.md) | Python | Turn banners and CVE ids into prioritized CVE lists via the official NVD API, chained from a port scan |
 | [dirbrute](dirbrute.md) | Go | Brute-force directories, filter wildcard noise, probe extensions, authenticate with cookies and headers |
 | [hashcrack](hashcrack.md) | Python | Crack MD5/SHA-1/SHA-256 digests, build rule chains, handle salted digests |
 | [recon-pipeline](recon-pipeline.md) | Python | Chain everything into one run and read the generated reports |
@@ -22,8 +24,10 @@ shape captured in [examples/](../../examples/).
 [dirbrute-v1.1.1](https://github.com/Abolfazlrwm/Security/releases/tag/dirbrute-v1.1.1),
 [hashcrack-v1.2.0](https://github.com/Abolfazlrwm/Security/releases/tag/hashcrack-v1.2.0),
 [port-scanner-v1.0.0](https://github.com/Abolfazlrwm/Security/releases/tag/port-scanner-v1.0.0),
-[takeover-check-v1.0.0](https://github.com/Abolfazlrwm/Security/releases/tag/takeover-check-v1.0.0) and
-[web-audit-v1.0.0](https://github.com/Abolfazlrwm/Security/releases/tag/web-audit-v1.0.0)
+[takeover-check-v1.0.0](https://github.com/Abolfazlrwm/Security/releases/tag/takeover-check-v1.0.0),
+[web-audit-v1.0.0](https://github.com/Abolfazlrwm/Security/releases/tag/web-audit-v1.0.0),
+[jwt-analyzer-v1.0.0](https://github.com/Abolfazlrwm/Security/releases/tag/jwt-analyzer-v1.0.0) and
+[cve-lookup-v1.0.0](https://github.com/Abolfazlrwm/Security/releases/tag/cve-lookup-v1.0.0)
 each carry binaries for every supported platform plus `checksums.txt`.
 Verify, chmod and run:
 
