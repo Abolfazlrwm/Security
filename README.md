@@ -2,6 +2,10 @@
 
 [![CI](https://github.com/Abolfazlrwm/Security/actions/workflows/ci.yml/badge.svg)](https://github.com/Abolfazlrwm/Security/actions/workflows/ci.yml)
 [![Release binaries](https://github.com/Abolfazlrwm/Security/actions/workflows/release.yml/badge.svg)](https://github.com/Abolfazlrwm/Security/actions/workflows/release.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+![Python](https://img.shields.io/badge/python-3.8%2B-blue.svg)
+![Platform](https://img.shields.io/badge/platform-linux%20%7C%20macOS%20%7C%20Windows-lightgrey.svg)
+![Tests](https://img.shields.io/badge/tests-unit%20%2B%20integration-brightgreen.svg)
 
 A compact toolkit of network reconnaissance, auditing and analysis tools —
 nine utilities in Python and Go with zero third-party dependencies, from
@@ -56,6 +60,9 @@ dirbrute is cross-compiled with the Go toolchain; the Python tools are
 packaged with PyInstaller. Both paths smoke-test every artifact inside the
 release workflow before it gets published, so each binary runs without any
 interpreter, runtime or third-party package.
+
+The full release-by-release history — what shipped in every tag, with
+dates and links — lives in [CHANGELOG.md](CHANGELOG.md).
 
 ## Quick start
 
