@@ -17,11 +17,15 @@ wired together by a one-command pipeline.
 
 ## Demo
 
-Three tools against a local demo target, exactly as captured in
-[examples/](examples/) — hash cracking, directory brute force and the
-consolidated pipeline:
+Live terminal capture — five tools run for real against a local demo
+webserver: hash cracking, directory brute force, a port scan, a JWT
+audit and the consolidated pipeline. Every line is the tools' verbatim
+stdout, recorded in one take:
 
-![Toolkit demo: hashcrack, dirbrute and recon-pipeline running in a terminal](docs/demo.gif)
+![Live capture: five tools running against a local demo target](docs/demo-live.gif)
+
+An older walkthrough GIF assembled from the captured runs in
+[examples/](examples/) is at [docs/demo.gif](docs/demo.gif).
 
 ## Tools
 

@@ -19,11 +19,16 @@ binary and is exercised by unit + integration tests on every push.
 
 ## Live demo
 
-Three tools against a local demo target, exactly as captured in the
-[examples](https://github.com/Abolfazlrwm/Security/tree/main/examples)
-directory — hash cracking, directory brute force and the consolidated pipeline:
+Live terminal capture — five tools run for real against a local demo
+webserver (hash cracking, directory brute force, a port scan, a JWT
+audit and the consolidated pipeline). Every line is the tools'
+verbatim stdout, recorded in one take:
 
-![Toolkit demo: hashcrack, dirbrute and recon-pipeline running in a terminal](demo.gif)
+![Live capture: five tools running against a local demo target](demo-live.gif)
+
+An older walkthrough GIF built from the captured runs in the
+[examples](https://github.com/Abolfazlrwm/Security/tree/main/examples)
+directory is [here](https://github.com/Abolfazlrwm/Security/blob/main/docs/demo.gif).
 
 ## The tools
 
