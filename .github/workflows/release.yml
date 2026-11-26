@@ -14,6 +14,8 @@ on:
 
 permissions:
   contents: write
+  id-token: write
+  attestations: write
 
 jobs:
   dirbrute:
@@ -42,10 +44,25 @@ jobs:
             [ "$goos" = "windows" ] && exe=".exe"
             echo "building dirbrute-${VERSION}-${goos}-${goarch}${exe}"
             GOOS="$goos" GOARCH="$goarch" \
-              go build -trimpath -ldflags "-s -w" \
+              go build -trimpath -ldflags "-s -w -X main.version=${VERSION}" \
               -o "dirbrute-${VERSION}-${goos}-${goarch}${exe}" .
           done
           sha256sum dirbrute-* > checksums.txt
+
+      - name: Smoke test the linux binary
+        shell: bash
+        run: |
+          VERSION="${GITHUB_REF_NAME#dirbrute-v}"
+          out="$(./dirbrute/dirbrute-${VERSION}-linux-amd64 -version)"
+          echo "$out"
+          [ "$out" = "dirbrute ${VERSION}" ]
+
+      - name: Attest build provenance
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-path: |
+            dirbrute/dirbrute-*
+            dirbrute/checksums.txt
 
       - name: Attach binaries to the release
         uses: softprops/action-gh-release@v2
@@ -127,7 +144,13 @@ jobs:
 
       - name: Smoke test the binary
         shell: bash
-        run: ./dist/${{ matrix.tool }}-* --help > /dev/null
+        run: |
+          VERSION="${GITHUB_REF_NAME#*-v}"
+          bin="$(ls dist/${{ matrix.tool }}-*)"
+          "$bin" --help > /dev/null
+          out="$("$bin" --version)"
+          echo "$out"
+          [ "$out" = "${{ matrix.tool }} ${VERSION}" ]
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
@@ -150,6 +173,13 @@ jobs:
 
       - name: Generate checksums
         run: cd dist && sha256sum ${{ needs.plan.outputs.tool }}-* > checksums.txt
+
+      - name: Attest build provenance
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-path: |
+            dist/${{ needs.plan.outputs.tool }}-*
+            dist/checksums.txt
 
       - name: Attach binaries to the release
         uses: softprops/action-gh-release@v2

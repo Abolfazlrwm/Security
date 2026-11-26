@@ -17,6 +17,8 @@ to test.
 
 from __future__ import annotations
 
+__version__ = "1.0.0"
+
 import argparse
 import http.cookies
 import json
@@ -267,6 +269,8 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         prog=TOOL_NAME,
         description="Audit TLS certificate and HTTP security headers, then score the target.",
     )
+    parser.add_argument("--version", action="version",
+                  version="%(prog)s " + __version__)
     parser.add_argument("target", help="URL or host, e.g. example.com or https://host:8443")
     parser.add_argument(
         "--timeout", type=float, default=DEFAULT_TIMEOUT,

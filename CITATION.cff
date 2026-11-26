@@ -1,0 +1,29 @@
+cff-version: 1.2.0
+title: Security - a nine-tool security toolkit in Python and Go
+message: If you use this toolkit in your research or coursework, please cite it using this file.
+type: software
+authors:
+  - name: Abolfazlrwm
+    website: https://github.com/Abolfazlrwm
+repository-code: https://github.com/Abolfazlrwm/Security
+url: https://abolfazlrwm.github.io/Security/
+abstract: >
+  A compact toolkit of network reconnaissance, auditing and analysis tools -
+  nine utilities in Python and Go with zero third-party dependencies, from
+  subdomain discovery and port scanning to JWT auditing and CVE triage,
+  wired together by a one-command reporting pipeline. Every tool ships as a
+  standalone binary with build-provenance attestations and is exercised by
+  unit and integration tests on every push.
+keywords:
+  - security
+  - reconnaissance
+  - pentest-tools
+  - subdomain-enumeration
+  - port-scanner
+  - jwt
+  - cve-lookup
+  - directory-bruteforce
+  - hash-cracking
+license: MIT
+version: 1.0.0
+date-released: "2026-11-23"

@@ -91,10 +91,15 @@ $ git push origin dirbrute-v1.2.0
 
 Artifacts for every supported platform plus `checksums.txt` are
 attached to the release automatically — never upload binaries by hand.
-Before tagging: bump the tool's reported version (`TOOL_VERSION` in the
-Python tools), update the tool's README if flags changed, refresh
-`examples/` if the output shape changed, and make sure CI is green on
-`main`.
+Before tagging: bump the tool's reported version (`__version__` in the
+Python tools, `version` in dirbrute/main.go — the release workflow
+injects it with `-ldflags "-X main.version=..."` and refuses to publish
+unless the binary's `--version` / `-version` output matches the tag),
+update the tool's README if flags changed, refresh `examples/` if the
+output shape changed, and make sure CI is green on `main`. Every
+release is also signed with build-provenance attestations, so each
+downloaded binary can be verified back to the exact workflow run that
+built it.
 
 ## Reporting bugs and ideas
 

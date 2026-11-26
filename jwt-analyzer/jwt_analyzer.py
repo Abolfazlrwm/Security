@@ -15,6 +15,8 @@ to test. Only the Python standard library is used; no network requests.
 
 from __future__ import annotations
 
+__version__ = "1.0.0"
+
 import argparse
 import base64
 import binascii
@@ -385,6 +387,8 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         prog=TOOL_NAME,
         description="Decode, verify and audit JWTs offline (stdlib only).",
     )
+    parser.add_argument("--version", action="version",
+                  version="%(prog)s " + __version__)
     parser.add_argument("token", help="compact JWT, e.g. eyJhbGciOi....eyJzdWIi....sig")
     parser.add_argument("--secret", help="verify HMAC signatures with this secret")
     parser.add_argument("--wordlist", help="extra candidate secrets, one per line")

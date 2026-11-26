@@ -2,6 +2,7 @@
 
 [![CI](https://github.com/Abolfazlrwm/Security/actions/workflows/ci.yml/badge.svg)](https://github.com/Abolfazlrwm/Security/actions/workflows/ci.yml)
 [![Release binaries](https://github.com/Abolfazlrwm/Security/actions/workflows/release.yml/badge.svg)](https://github.com/Abolfazlrwm/Security/actions/workflows/release.yml)
+[![CodeQL](https://github.com/Abolfazlrwm/Security/actions/workflows/codeql.yml/badge.svg)](https://github.com/Abolfazlrwm/Security/actions/workflows/codeql.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 ![Python](https://img.shields.io/badge/python-3.8%2B-blue.svg)
 ![Platform](https://img.shields.io/badge/platform-linux%20%7C%20macOS%20%7C%20Windows-lightgrey.svg)
@@ -63,7 +64,11 @@ sha256 checksums, to the matching GitHub release:
 dirbrute is cross-compiled with the Go toolchain; the Python tools are
 packaged with PyInstaller. Both paths smoke-test every artifact inside the
 release workflow before it gets published, so each binary runs without any
-interpreter, runtime or third-party package.
+interpreter, runtime or third-party package. Every binary reports its
+version (`--version`, or `-version` for dirbrute) and the workflow refuses
+to publish unless it matches the tag; each release is additionally signed
+with build-provenance attestations that tie every downloaded file back to
+the exact workflow run that built it.
 
 The full release-by-release history — what shipped in every tag, with
 dates and links — lives in [CHANGELOG.md](CHANGELOG.md).

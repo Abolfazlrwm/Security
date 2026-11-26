@@ -10,6 +10,8 @@ hashing is CPU bound, so the loop stays single threaded on purpose.
 
 from __future__ import annotations
 
+__version__ = "1.2.0"
+
 import argparse
 import hashlib
 import sys
@@ -200,6 +202,8 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         description="Crack MD5/SHA-1/SHA-256/SHA-512 hashes with wordlists and rules.",
         epilog="available rules: " + ", ".join(RULES),
     )
+    parser.add_argument("--version", action="version",
+                  version="%(prog)s " + __version__)
     parser.add_argument("--hash", action="append", metavar="DIGEST", help="target digest, repeatable")
     parser.add_argument("--hashes", metavar="FILE", help="file with one digest per line")
     parser.add_argument("-w", "--wordlist", help="wordlist (default: bundled common-passwords.txt, then the built-in list)")

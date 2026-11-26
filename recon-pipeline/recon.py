@@ -20,6 +20,8 @@ library is used.
 
 from __future__ import annotations
 
+__version__ = "1.3.0"
+
 import argparse
 import html
 import json
@@ -571,6 +573,8 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         prog=TOOL_NAME,
         description="Chain subdomain-enum, port-scanner, web-audit and dirbrute into one recon report.",
     )
+    parser.add_argument("--version", action="version",
+                  version="%(prog)s " + __version__)
     parser.add_argument("--domain", help="target domain, e.g. example.com")
     parser.add_argument("--url", help="base URL for the primary directory scan (default: https://<domain>)")
     parser.add_argument("--hosts", help="comma separated host list; skips the subdomain phase")

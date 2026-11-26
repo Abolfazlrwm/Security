@@ -17,6 +17,8 @@ test.
 
 from __future__ import annotations
 
+__version__ = "1.0.0"
+
 import argparse
 import concurrent.futures
 import json
@@ -331,6 +333,8 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         prog=TOOL_NAME,
         description="Fingerprint subdomain takeover opportunities (CNAME + body signature).",
     )
+    parser.add_argument("--version", action="version",
+                  version="%(prog)s " + __version__)
     parser.add_argument("hosts", nargs="*", help="candidate hosts, e.g. blog.example.com")
     parser.add_argument(
         "-f", "--file", metavar="FILE",

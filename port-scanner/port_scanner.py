@@ -12,6 +12,8 @@ test. Only the Python standard library is used.
 
 from __future__ import annotations
 
+__version__ = "1.0.1"
+
 import argparse
 import concurrent.futures
 import json
@@ -209,6 +211,8 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         prog=TOOL_NAME,
         description="Fast TCP connect scan with banner grabbing (stdlib only).",
     )
+    parser.add_argument("--version", action="version",
+                  version="%(prog)s " + __version__)
     parser.add_argument("target", help="host or IP to scan, e.g. scanme.nmap.org")
     ports_group = parser.add_mutually_exclusive_group()
     ports_group.add_argument(

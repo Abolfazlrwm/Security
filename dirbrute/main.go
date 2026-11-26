@@ -16,6 +16,10 @@ import (
 	"strings"
 )
 
+// version is overridden at build time with -ldflags
+// "-X main.version=vX.Y.Z" so release binaries report their tag.
+var version = "dev"
+
 const usageText = `dirbrute - threaded directory and file brute-forcer
 
 Usage:
@@ -62,6 +66,7 @@ type config struct {
 	quiet          bool
 	timeoutSeconds int
 	outputPath     string
+	showVersion    bool
 }
 
 func newFlagSet(cfg *config) *flag.FlagSet {
@@ -84,6 +89,7 @@ func newFlagSet(cfg *config) *flag.FlagSet {
 	fs.BoolVar(&cfg.quiet, "q", false, "suppress progress output on stderr")
 	fs.IntVar(&cfg.timeoutSeconds, "timeout", 10, "per-request timeout in seconds")
 	fs.StringVar(&cfg.outputPath, "o", "", "additionally write findings to this file")
+	fs.BoolVar(&cfg.showVersion, "version", false, "print the version and exit")
 	return fs
 }
 
@@ -91,6 +97,11 @@ func parseArgs(cfg *config, args []string) error {
 	fs := newFlagSet(cfg)
 	if err := fs.Parse(args); err != nil {
 		return err
+	}
+
+	if cfg.showVersion {
+		fmt.Printf("dirbrute %s\n", version)
+		os.Exit(0)
 	}
 
 	if cfg.target == "" {

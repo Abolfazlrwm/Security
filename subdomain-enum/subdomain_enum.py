@@ -15,6 +15,8 @@ Only the Python standard library is used.
 
 from __future__ import annotations
 
+__version__ = "1.2.0"
+
 import argparse
 import concurrent.futures
 import json
@@ -211,6 +213,8 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         prog=TOOL_NAME,
         description="Enumerate subdomains via crt.sh and DNS brute force.",
     )
+    parser.add_argument("--version", action="version",
+                  version="%(prog)s " + __version__)
     parser.add_argument("domain", help="target domain, e.g. example.com")
     parser.add_argument(
         "-w", "--wordlist",

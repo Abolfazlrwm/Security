@@ -26,6 +26,7 @@ import hashlib
 import hmac
 import http.server
 import json
+import re
 import shutil
 import socket
 import subprocess
@@ -297,6 +298,28 @@ def test_help_pages() -> None:
     proc = run([sys.executable, str(REPO_ROOT / "recon-pipeline" / "recon.py"), "--help"])
     check("recon-pipeline --help exits zero",
           proc.returncode == 0 and "--skip-ports" in proc.stdout)
+
+    print("\n== tool --version pages ==", flush=True)
+    for rel in ("subdomain-enum/subdomain_enum.py",
+                "port-scanner/port_scanner.py",
+                "takeover-check/takeover_check.py",
+                "web-audit/web_audit.py",
+                "jwt-analyzer/jwt_analyzer.py",
+                "cve-lookup/cve_lookup.py",
+                "hashcrack/hashcrack.py",
+                "recon-pipeline/recon.py"):
+        proc = run([sys.executable, str(REPO_ROOT / rel), "--version"])
+        name = rel.split("/")[0]
+        check(f"{name} --version reports semver",
+              proc.returncode == 0
+              and bool(re.search(r"\d+\.\d+\.\d+\s*$", (proc.stdout or "").strip())))
+    proc = run([str(REPO_ROOT / "dirbrute" / "dirbrute"), "-version"])
+    dirb_out = (proc.stdout or "").strip()
+    check("dirbrute -version reports its version",
+          proc.returncode == 0
+          and (dirb_out == "dirbrute dev"
+               or bool(re.search(r"dirbrute \d+\.\d+\.\d+$", dirb_out))),
+          dirb_out)
 
 
 def test_port_scanner(port: int) -> None:
