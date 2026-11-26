@@ -29,6 +29,7 @@ Tools: `cve-lookup` · `dirbrute` · `hashcrack` · `jwt-analyzer` · `port-scan
 
 ## port-scanner
 
+- **port-scanner-v1.0.1** — 2026-11-26 — Initial release. [release](https://github.com/Abolfazlrwm/Security/releases/tag/port-scanner-v1.0.1)
 - **port-scanner-v1.0.0** — 2026-11-16 — **First release of port-scanner**: thread-pool TCP connect scanner over a curated top-100 port list, with arbitrary `--ports` specs (`22,80,443,8000-8100`), banner grabbing and a built-in service-name map; Table output with service + banner per open port … [release](https://github.com/Abolfazlrwm/Security/releases/tag/port-scanner-v1.0.0)
 
 ## recon-pipeline

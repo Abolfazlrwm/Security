@@ -55,7 +55,7 @@ sha256 checksums, to the matching GitHub release:
 | dirbrute | linux (amd64, arm64), macOS (amd64, arm64), windows | [dirbrute-v1.1.1](https://github.com/Abolfazlrwm/Security/releases/tag/dirbrute-v1.1.1) |
 | subdomain-enum | linux, macOS (arm64), windows | [subdomain-enum-v1.2.0](https://github.com/Abolfazlrwm/Security/releases/tag/subdomain-enum-v1.2.0) |
 | hashcrack | linux, macOS (arm64), windows | [hashcrack-v1.2.0](https://github.com/Abolfazlrwm/Security/releases/tag/hashcrack-v1.2.0) |
-| port-scanner | linux, macOS (arm64), windows | [port-scanner-v1.0.0](https://github.com/Abolfazlrwm/Security/releases/tag/port-scanner-v1.0.0) |
+| port-scanner | linux, macOS (arm64), windows | [port-scanner-v1.0.1](https://github.com/Abolfazlrwm/Security/releases/tag/port-scanner-v1.0.1) |
 | takeover-check | linux, macOS (arm64), windows | [takeover-check-v1.0.0](https://github.com/Abolfazlrwm/Security/releases/tag/takeover-check-v1.0.0) |
 | web-audit | linux, macOS (arm64), windows | [web-audit-v1.0.0](https://github.com/Abolfazlrwm/Security/releases/tag/web-audit-v1.0.0) |
 | jwt-analyzer | linux, macOS (arm64), windows | [jwt-analyzer-v1.0.0](https://github.com/Abolfazlrwm/Security/releases/tag/jwt-analyzer-v1.0.0) |
